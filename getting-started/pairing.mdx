@@ -5,52 +5,11 @@ description: "Link your local agent to your Telegram account using a one-time pa
 
 Pairing is the process of linking a local agent instance (running on your machine) to your Telegram account. Once paired, the bot knows which agent to forward your messages to, and which Telegram user is authorized to send commands.
 
-## Step 1 — Generate a pairing code
+## Step 1 — Log in to the dashboard
 
-Navigate to your project directory and run the init wizard:
+Go to [remoteagent.chat](https://remoteagent.chat) and click **Login with Telegram**.
 
-```bash
-cd /path/to/your/project
-remoteagent init
-```
-
-The wizard asks a few questions:
-
-- **Project name** — used to identify this agent in the dashboard and bot messages. Defaults to the directory name.
-- **Runner** — which AI engine to use. See [Runners](/runners/overview) for the full list. Defaults to `claude-sdk`.
-- **API key** — only prompted for runners that require one. Stored locally in `~/.remoteagent/config.json` and never transmitted to any server.
-
-At the end of the wizard, the terminal displays a **pairing code**:
-
-```
-Your pairing code: XK9-4TZ
-
-Go to https://remoteagent.chat/connect and enter this code.
-The code expires in 10 minutes.
-```
-
-<Warning>
-  The pairing code is **single-use** and expires after **10 minutes**. If it
-  expires before you complete pairing, run `remoteagent init` again — this
-  generates a new code without overwriting your existing configuration.
-</Warning>
-
-You can also pass flags to skip the interactive prompts:
-
-```bash
-remoteagent init --runner claude-sdk
-remoteagent init --runner custom --runner-bin /usr/local/bin/my-ai-tool
-```
-
-## Step 2 — Open the connect page
-
-On your phone or browser, go to:
-
-**[remoteagent.chat/connect](https://remoteagent.chat/connect)**
-
-## Step 3 — Log in with Telegram
-
-Click the **Login with Telegram** button. A Telegram widget will open. Authenticate with your Telegram account — this is the account the bot will accept commands from.
+A Telegram widget will open. Authenticate with your Telegram account — this is the account the bot will accept commands from.
 
 <Note>
   You only need to log in once per browser session. RemoteAgent uses the
@@ -59,27 +18,48 @@ Click the **Login with Telegram** button. A Telegram widget will open. Authentic
   password or phone number.
 </Note>
 
-## Step 4 — Enter the pairing code
+## Step 2 — Generate a pairing code
 
-Type (or paste) the pairing code from Step 1 into the code input field and click **Connect**.
+In the dashboard, click **Pair new agent** and enter a project name. The dashboard will generate and display a **pairing code**:
 
-The page confirms the pairing within a few seconds. Simultaneously, the Telegram bot sends you a confirmation message with a summary of the paired agent (project name, runner, machine hostname).
+```
+Your pairing code: XK9-4TZ
+Expires in 10 minutes.
+```
 
-## Step 5 — Start the agent
+<Warning>
+  The pairing code is **single-use** and expires after **10 minutes**. If it
+  expires before you complete pairing, click **Pair new agent** again to
+  generate a new one.
+</Warning>
 
-Back in your terminal, start the agent process:
+## Step 3 — Run the init wizard
+
+Navigate to your project directory and run:
 
 ```bash
-remoteagent start
+cd /path/to/your/project
+remoteagent init
 ```
 
-The agent connects to its Redis channel and begins listening for commands. You will see a log line like:
+The wizard asks a few questions:
 
-```
-Agent online — listening on channel agent:a1b2c3d4-...
+- **Runner** — which AI engine to use. See [Runners](/runners/overview) for the full list. Defaults to `claude-sdk`.
+- **API key** — only prompted for runners that require one. Stored locally in `~/.remoteagent/config.json` and never transmitted to any server.
+- **Pairing code** — paste the code from the dashboard.
+
+Once the code is accepted, the agent is linked to your Telegram account and starts automatically.
+
+You can also pass flags to skip the interactive prompts:
+
+```bash
+remoteagent init --runner claude-sdk
+remoteagent init --runner custom --runner-bin /usr/local/bin/my-ai-tool
 ```
 
-Your bot is now active. Send any message to it in Telegram and the agent will process it.
+## Step 4 — Send your first command
+
+Your bot is now active. Open Telegram, find the **RemoteAgent bot**, and send any message to test it.
 
 ## Pairing multiple projects
 
@@ -96,4 +76,4 @@ After pairing, the agent's credentials are stored in two places on your machine:
 - `~/.remoteagent/config.json` — global settings (API key, preferred language)
 - `~/.remoteagent/agents/{agentId}.json` — per-agent settings (agent ID, token, project path, runner, Redis URL)
 
-Neither file is ever read by the RemoteAgent servers. The agent token in the per-agent config is a JWT used only to authenticate Realtime channel subscriptions — it does not grant access to your files or API keys.
+Neither file is ever read by the RemoteAgent servers. The agent token in the per-agent config is a JWT used only to authenticate Redis channel subscriptions — it does not grant access to your files or API keys.

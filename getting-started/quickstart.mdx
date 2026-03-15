@@ -30,6 +30,17 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
     **Requirements:** Node.js 20 or later. Run `node --version` to check.
   </Step>
 
+  <Step title="Get your pairing code from the dashboard">
+    Log in to [remoteagent.chat](https://remoteagent.chat) with the Telegram widget.
+
+    Once in the dashboard, click **Pair new agent**, enter a project name, and confirm. The dashboard will display a **pairing code** — a short string like `XK9-4TZ`.
+
+    <Warning>
+      The pairing code expires in **10 minutes** and can only be used once.
+      Keep the dashboard tab open while you complete the next step.
+    </Warning>
+  </Step>
+
   <Step title="Run the init wizard">
     Navigate to the project directory you want to control, then run:
 
@@ -40,26 +51,11 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
 
     The interactive wizard will ask you:
 
-    - **Project name** — a human-readable label shown in the dashboard and bot messages.
     - **Runner** — which AI engine to use. Press Enter to accept the default (`claude-sdk`), or type a runner name. See [Runners](/runners/overview) for the full list.
     - **API key** — only required for runners that need one (e.g., `claude-sdk`, `claude-code`). Stored locally in `~/.remoteagent/config.json`, never transmitted.
+    - **Pairing code** — paste the code you got from the dashboard in the previous step.
 
-    At the end of the wizard you will see a **pairing code** — a short alphanumeric string like `XK9-4TZ`.
-
-    <Warning>
-      The pairing code expires in **10 minutes** and can only be used once.
-      If it expires, run `remoteagent init` again to generate a new one.
-    </Warning>
-  </Step>
-
-  <Step title="Connect via Telegram">
-    Open [remoteagent.chat/connect](https://remoteagent.chat/connect) in your browser (phone or desktop).
-
-    1. Click **Login with Telegram** and authenticate with the Telegram widget.
-    2. Enter the pairing code from the previous step.
-    3. Click **Connect**.
-
-    The page will confirm the pairing. Your Telegram bot is now linked to your agent. You will also receive a confirmation message directly in Telegram.
+    Once the code is accepted, the agent is paired and starts automatically.
   </Step>
 
   <Step title="Send your first command">
