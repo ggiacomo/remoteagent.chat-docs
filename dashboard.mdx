@@ -1,0 +1,82 @@
+---
+title: "Dashboard"
+description: "Manage your agents, view session history, and control your account from the RemoteAgent web dashboard."
+---
+
+The RemoteAgent dashboard is available at [remoteagent.chat/dashboard](https://remoteagent.chat/dashboard). It provides a web interface to monitor your agents, review past sessions, and manage your account and plan.
+
+## Accessing the dashboard
+
+Log in with the same Telegram account you used during pairing. The Telegram Login Widget is the only authentication method — there is no separate username or password.
+
+## Agents
+
+The **Agents** section shows all agents you have registered, with:
+
+- **Project name** — the label you assigned during `remoteagent init`
+- **Status** — online or offline, updated in real time
+- **Last seen** — timestamp of the last heartbeat
+- **Runner** — which AI engine this agent is using
+- **Machine** — hostname of the machine where the agent was initialized
+
+From this section you can:
+
+- **Delete an agent** — removes it from the database. The agent process will continue running on your machine until you stop it, but it will no longer be able to receive commands.
+
+<Note>
+  Deleting an agent from the dashboard does not remove the local config file at
+  `~/.remoteagent/agents/{agentId}.json`. Remove it manually if needed.
+</Note>
+
+## Session history
+
+The **Sessions** section shows a log of all past commands sent to your agents:
+
+| Column | Description |
+|---|---|
+| Started at | When the session began |
+| Project | Which agent handled the session |
+| Prompt preview | First 200 characters of the prompt |
+| Status | `completed`, `error`, or `aborted` |
+| Duration | Time from start to completion |
+
+Session history is retained for 30 days on all plans.
+
+## Account
+
+The **Account** section shows:
+
+- Your Telegram username and ID
+- Current plan (Trial / Solo / Pro / Team)
+- Plan status (trialing / active / past due / canceled)
+- Trial end date (if on trial)
+- Billing portal link (for paid plans)
+
+### Upgrading your plan
+
+Click **Upgrade** to open the Stripe Checkout page. Choose your plan, complete payment, and the upgrade takes effect immediately — no restart required. Your agent receives a signal within 30 seconds of payment confirmation.
+
+### Managing billing
+
+Click **Manage billing** to open the Stripe Customer Portal, where you can:
+
+- Update your payment method
+- View past invoices
+- Change your plan (upgrade or downgrade)
+- Cancel your subscription
+
+## Team management (Team plan)
+
+On the **Team plan**, the Account section includes a **Team members** panel where you can:
+
+- View all Telegram users authorized to send commands to your agents
+- Add up to 4 additional Telegram users (5 total including yourself)
+- Remove team members
+
+Team members can send commands to any of your agents from their own Telegram accounts. Each member sees the same agents and session history.
+
+<Note>
+  Each team member controls the same set of agents. There is currently no
+  per-member access control — all team members have equal access to all
+  projects.
+</Note>

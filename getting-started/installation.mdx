@@ -1,0 +1,140 @@
+---
+title: "Installation"
+description: "Install the RemoteAgent package and verify your environment before running the init wizard."
+---
+
+## Requirements
+
+Before installing, make sure the machine where the agent will run meets these requirements:
+
+| Requirement | Minimum version | How to check |
+|---|---|---|
+| Node.js | 20.x or later | `node --version` |
+| npm | 9.x or later | `npm --version` |
+| OS | Linux, macOS, Windows (WSL) | — |
+
+<Note>
+  On Windows, RemoteAgent is supported and tested inside **WSL 2** (Windows
+  Subsystem for Linux). Native Windows support via PowerShell or CMD is not
+  guaranteed.
+</Note>
+
+If you need to install or upgrade Node.js, the recommended approach is using a version manager:
+
+<CodeGroup>
+  ```bash nvm (Linux/macOS)
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  nvm install 20
+  nvm use 20
+  ```
+
+  ```bash fnm (cross-platform, faster)
+  curl -fsSL https://fnm.vercel.app/install | bash
+  fnm install 20
+  fnm use 20
+  ```
+</CodeGroup>
+
+## Install RemoteAgent
+
+Install the package globally so the `remoteagent` command is available from any directory:
+
+```bash
+npm install -g remoteagent
+```
+
+### Verify the installation
+
+```bash
+remoteagent --version
+```
+
+Expected output:
+
+```
+remoteagent/x.y.z linux-x64 node-v20.x.x
+```
+
+If you see `command not found`, your npm global bin directory is not on your `PATH`. Fix it by adding the output of `npm config get prefix` followed by `/bin` to your shell profile:
+
+```bash
+# Find the global bin path
+npm config get prefix
+# Example output: /home/youruser/.npm-global
+
+# Add to ~/.bashrc or ~/.zshrc
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Reload
+source ~/.bashrc
+```
+
+## Runner prerequisites
+
+The `remoteagent` package itself has no runtime dependencies beyond Node.js. However, the AI runner you choose requires its own tooling installed separately.
+
+### claude-sdk (default)
+
+No additional binary needed. The runner uses the `@anthropic-ai/claude-code` SDK in-process. You will need an **Anthropic API key**, which you provide during `remoteagent init` and is stored locally in `~/.remoteagent/config.json`.
+
+### claude-code
+
+Requires the `claude` CLI binary:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+You also need an Anthropic API key. The `claude` binary reads it from the same local config.
+
+### gemini
+
+Requires the Google Gemini CLI:
+
+```bash
+npm install -g @google/gemini-cli
+gemini --version
+```
+
+A Google account is sufficient for the free tier. No credit card required.
+
+### aider
+
+Requires Python 3.9+ and pip:
+
+```bash
+pip install aider-chat
+aider --version
+```
+
+Aider works with OpenAI, Anthropic, Ollama, and many other model providers. You configure the model and API key separately via aider's own config or environment variables.
+
+### openclaw
+
+Requires the OpenClaw gateway to be running locally on port `18789` before starting the agent. Refer to the [OpenClaw runner documentation](/runners/openclaw) for setup details.
+
+### custom
+
+No specific prerequisites — any binary that reads from stdin and writes to stdout will work. See [Custom runner](/runners/custom) for examples.
+
+## Updating
+
+To update to the latest version of RemoteAgent:
+
+```bash
+npm update -g remoteagent
+remoteagent --version
+```
+
+## Uninstalling
+
+```bash
+npm uninstall -g remoteagent
+```
+
+This removes the binary. Local configuration stored in `~/.remoteagent/` is not deleted automatically. Remove it manually if needed:
+
+```bash
+rm -rf ~/.remoteagent
+```

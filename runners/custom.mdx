@@ -1,0 +1,119 @@
+---
+title: "custom"
+description: "Use any binary as the AI runner — as long as it reads a prompt from stdin and writes output to stdout."
+---
+
+The `custom` runner lets you connect RemoteAgent to any command-line tool that follows a simple contract: read a prompt from stdin, write output to stdout. This covers shell scripts, Python scripts, local model wrappers, internal tools, or any binary you build yourself.
+
+## Requirements
+
+- Your binary must be executable and on the machine running the agent.
+- It must read the prompt from **stdin** and write the response to **stdout**.
+- Exit code `0` indicates success; any non-zero exit code is treated as an error.
+- Node.js 20 or later.
+
+## Setup
+
+Pass the path to your binary with the `--runner-bin` flag:
+
+```bash
+remoteagent init --runner custom --runner-bin /path/to/your/binary
+```
+
+The binary path is saved in `~/.remoteagent/agents/{agentId}.json` and used each time the agent receives a command.
+
+## How it works
+
+When the agent receives a command, the runner:
+
+1. Spawns the binary as a child process
+2. Writes the prompt string to the process's stdin
+3. Closes the stdin stream (signals EOF to the binary)
+4. Reads stdout progressively and publishes chunks to the Redis output channel
+5. Waits for the process to exit, then publishes the `done` event
+
+Your binary should write output as it produces it (don't buffer everything until the end) for the best streaming experience in Telegram.
+
+## Example — bash script
+
+A minimal bash script that wraps a local `llm` command:
+
+```bash
+#!/bin/bash
+# /usr/local/bin/my-ai-wrapper
+
+# Read the full prompt from stdin
+PROMPT=$(cat)
+
+# Call your tool and stream output
+llm "$PROMPT"
+```
+
+Make it executable:
+
+```bash
+chmod +x /usr/local/bin/my-ai-wrapper
+remoteagent init --runner custom --runner-bin /usr/local/bin/my-ai-wrapper
+```
+
+## Example — Python script
+
+A Python script that calls the OpenAI API directly:
+
+```python
+#!/usr/bin/env python3
+# /usr/local/bin/openai-runner.py
+
+import sys
+import os
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+prompt = sys.stdin.read().strip()
+
+stream = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": prompt}],
+    stream=True,
+)
+
+for chunk in stream:
+    delta = chunk.choices[0].delta.content
+    if delta:
+        print(delta, end="", flush=True)
+```
+
+```bash
+chmod +x /usr/local/bin/openai-runner.py
+remoteagent init --runner custom --runner-bin /usr/local/bin/openai-runner.py
+```
+
+## Example — Ollama wrapper
+
+```bash
+#!/bin/bash
+# /usr/local/bin/ollama-runner
+
+PROMPT=$(cat)
+ollama run llama3.2 "$PROMPT"
+```
+
+## Passing environment variables
+
+If your binary needs environment variables (API keys, config paths), set them in the shell environment where you run `remoteagent start`. They are inherited by child processes:
+
+```bash
+export OPENAI_API_KEY=sk-...
+remoteagent start
+```
+
+Alternatively, use a wrapper script that sets the variables before calling the real binary.
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Works with any AI tool | No tool-use or file I/O capability (text only) |
+| Full control over the AI stack | You maintain the binary and its dependencies |
+| Zero vendor lock-in | Output quality depends entirely on your binary |
+| Air-gap compatible | Streaming requires explicit flush in your binary |

@@ -1,0 +1,59 @@
+---
+title: "Runners overview"
+description: "RemoteAgent supports multiple AI runners. Choose the one that fits your workflow, API access, and model preferences."
+---
+
+A **runner** is the AI engine that processes your prompts. RemoteAgent acts as the relay — the runner is what actually reads your code, reasons about it, and produces output. You choose a runner once during `remoteagent init`, and you can change it at any time by re-running init.
+
+## Comparison table
+
+| Runner | Type | Status | Requires | Best for |
+|---|---|---|---|---|
+| `claude-sdk` | In-process SDK | Stable | Anthropic API key | Best quality, default choice |
+| `claude-code` | CLI binary | Stable | `claude` CLI + API key | Same capability, external process |
+| `gemini` | CLI binary | Beta | Google account (free tier available) | No-cost option for Gemini models |
+| `aider` | CLI binary | Beta | Python, pip, model API key | Multi-model, open-source flexibility |
+| `openclaw` | HTTP gateway | Stable | OpenClaw running on localhost:18789 | Self-hosted AI gateway |
+| `custom` | CLI binary | Stable | Your binary on PATH | Any AI tool with stdin/stdout interface |
+
+## How to select a runner
+
+Pass the `--runner` flag to `remoteagent init`:
+
+```bash
+remoteagent init --runner claude-sdk       # default
+remoteagent init --runner claude-code
+remoteagent init --runner gemini
+remoteagent init --runner aider
+remoteagent init --runner openclaw
+remoteagent init --runner custom --runner-bin /path/to/binary
+```
+
+Without a flag, the wizard prompts you interactively.
+
+## Switching runners
+
+To change the runner for an existing agent, run `remoteagent init` again in the same project directory. The wizard detects your existing configuration and lets you update the runner without regenerating a new pairing code (the agent is already paired).
+
+Restart the agent after changing the runner:
+
+```bash
+remoteagent start
+```
+
+## Runner architecture
+
+All runners implement the same interface internally. When the agent receives a command from the Redis channel, it calls the runner with the prompt and streams chunks back as they are produced. The runner is responsible for:
+
+1. Receiving the prompt string
+2. Invoking the AI model (in-process, via subprocess, or via HTTP)
+3. Yielding output chunks as they arrive
+4. Signaling completion or error
+
+This uniform interface means the Telegram experience is identical regardless of which runner you use — output always streams in real time.
+
+<Note>
+  Runners marked **Beta** are functional but may have edge cases in output
+  parsing or error handling. If you encounter issues, please open an issue on
+  the [GitHub repository](https://github.com/remoteagent).
+</Note>

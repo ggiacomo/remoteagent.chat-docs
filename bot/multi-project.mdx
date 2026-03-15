@@ -1,0 +1,131 @@
+---
+title: "Multi-project"
+description: "Register multiple agents for different projects and control them all from the same Telegram bot."
+---
+
+RemoteAgent supports running multiple agents — one per project — all connected to the same Telegram bot. This lets you switch between projects without leaving Telegram: one message fixes a bug in your API, the next deploys a feature in your frontend.
+
+## Registering a second agent
+
+Each agent is initialized in its own project directory. Navigate to the second project and run `remoteagent init`:
+
+```bash
+cd /path/to/second-project
+remoteagent init
+```
+
+Complete the wizard as usual. You will receive a new pairing code. Go to [remoteagent.chat/connect](https://remoteagent.chat/connect), log in with the same Telegram account, and enter the new code.
+
+The bot now has two agents registered. Each has a unique agent ID and a project name you assigned during init.
+
+<Note>
+  The number of agents you can register depends on your plan. Trial and Solo
+  allow up to 3 projects. Pro and Team allow unlimited projects. See
+  [Pricing](/pricing) for details.
+</Note>
+
+## Starting a specific agent
+
+Each agent process runs independently on your machine. Navigate to the project directory and start it:
+
+```bash
+cd /path/to/first-project
+remoteagent start
+
+# In another terminal
+cd /path/to/second-project
+remoteagent start
+```
+
+You can also start an agent by name from anywhere:
+
+```bash
+remoteagent start "my-api"
+remoteagent start "frontend"
+```
+
+The name matches the project name you assigned during `remoteagent init`.
+
+## How the bot routes commands
+
+When you send a message to the bot, routing works as follows:
+
+- **One agent online** — the command is sent directly to that agent, no selection needed.
+- **Multiple agents online** — the bot asks you which project to target:
+
+  ```
+  Which project?
+  [1] my-api (online)
+  [2] frontend (online)
+  [3] data-pipeline (offline)
+  ```
+
+  Reply with the number to select a project. The bot remembers your last selection within a session, so you do not need to re-select for every message until you explicitly switch.
+
+- **All agents offline** — the bot notifies you that no agents are reachable and suggests running `remoteagent start`.
+
+## Switching the active project
+
+To switch which project receives your commands, send:
+
+```
+/project
+```
+
+The bot responds with the project selector. Choose the number of the project you want to target. All subsequent commands go to that project until you switch again.
+
+You can also address a project directly by name:
+
+```
+/project frontend
+```
+
+## Listing your agents
+
+Send `/agents` to the bot to see all registered agents and their current status:
+
+```
+Your agents:
+1. my-api — online (last seen: just now)
+2. frontend — online (last seen: 2 minutes ago)
+3. data-pipeline — offline (last seen: 3 days ago)
+```
+
+## Managing agents from the dashboard
+
+The [dashboard](https://remoteagent.chat/dashboard) shows all registered agents with their status, last seen time, and session history. You can delete an agent from the dashboard if you no longer need it.
+
+Deleting an agent from the dashboard does not remove the local config files on your machine. To fully remove an agent:
+
+1. Delete it from the dashboard
+2. Remove the config file: `rm ~/.remoteagent/agents/{agentId}.json`
+
+## Running agents as background services
+
+For agents on a server or a machine that stays on, consider running them as system services so they restart automatically after a reboot.
+
+<CodeGroup>
+  ```bash systemd (Linux)
+  # /etc/systemd/system/remoteagent-myapi.service
+  [Unit]
+  Description=RemoteAgent — my-api
+  After=network.target
+
+  [Service]
+  User=youruser
+  WorkingDirectory=/path/to/my-api
+  ExecStart=remoteagent start
+  Restart=on-failure
+  RestartSec=5
+
+  [Install]
+  WantedBy=multi-user.target
+  ```
+
+  ```bash pm2 (Node.js process manager)
+  pm2 start "remoteagent start" --name my-api --cwd /path/to/my-api
+  pm2 start "remoteagent start" --name frontend --cwd /path/to/frontend
+  pm2 save
+  pm2 startup
+  ```
+</CodeGroup>

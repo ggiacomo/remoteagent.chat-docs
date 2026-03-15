@@ -1,0 +1,83 @@
+---
+title: "openclaw"
+description: "Connect RemoteAgent to a self-hosted AI gateway via the OpenClaw HTTP interface on localhost:18789."
+---
+
+The `openclaw` runner connects to a locally running HTTP gateway that exposes an OpenAI-compatible API on `localhost:18789`. This is designed for self-hosted AI setups where you run your own model gateway — for example, a local proxy that routes to multiple models, applies rate limiting, or enforces custom policies.
+
+## Requirements
+
+- An OpenClaw-compatible gateway running and listening on `localhost:18789` before the agent starts.
+- The gateway must implement an OpenAI-compatible `/v1/chat/completions` endpoint.
+- Node.js 20 or later.
+
+## Setup
+
+Start your gateway first, then initialize the agent:
+
+```bash
+# 1. Start the gateway (example — replace with your actual command)
+openclaw start --port 18789
+
+# 2. Initialize the agent
+remoteagent init --runner openclaw
+```
+
+Or choose `openclaw` when prompted by the interactive wizard.
+
+<Warning>
+  The agent will fail to start if the gateway is not reachable at
+  `localhost:18789` when `remoteagent start` is run. Always start the gateway
+  before starting the agent.
+</Warning>
+
+## How it works
+
+The runner sends POST requests to `http://localhost:18789/v1/chat/completions` using the OpenAI API format. The prompt is sent as a user message. Response chunks are streamed via server-sent events (SSE) and forwarded to the Redis output channel as they arrive.
+
+Example request body sent by the runner:
+
+```json
+{
+  "model": "default",
+  "messages": [
+    { "role": "user", "content": "<your prompt here>" }
+  ],
+  "stream": true
+}
+```
+
+The `model` field defaults to `"default"` — your gateway is responsible for routing that to the appropriate backend model.
+
+## Configuring the model
+
+If your gateway expects a specific model name, you can configure it in the per-agent config file at `~/.remoteagent/agents/{agentId}.json`:
+
+```json
+{
+  "runner": "openclaw",
+  "runnerModel": "llama3.2-70b"
+}
+```
+
+Edit this file and restart the agent:
+
+```bash
+remoteagent start
+```
+
+## Use cases
+
+- **Local model routing** — run multiple models and route based on task type
+- **Cost control** — apply rate limiting or budget caps at the gateway layer
+- **Custom middleware** — inject system prompts, logging, or content filters before requests reach the model
+- **Air-gapped environments** — run entirely offline with no external API calls
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Full control over the AI backend | Requires running and maintaining a gateway |
+| Works with any OpenAI-compatible model | Gateway must be running before the agent starts |
+| Air-gap compatible | More setup complexity |
+| No API key managed by RemoteAgent | — |

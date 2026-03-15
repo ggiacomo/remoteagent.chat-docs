@@ -1,0 +1,140 @@
+---
+title: "Sending commands"
+description: "How to send prompts to your AI agent through Telegram and work with the streaming output."
+---
+
+Once your agent is paired and running, controlling it is as simple as sending a Telegram message. Type a prompt in natural language and the agent starts working immediately. Output streams back to Telegram in real time.
+
+## Basic usage
+
+Open Telegram, find the RemoteAgent bot, and type any prompt:
+
+```
+List all the files in this project and summarize what each one does
+```
+
+```
+Fix the TypeScript error in src/api/users.ts
+```
+
+```
+Add input validation to the POST /api/products endpoint using Zod
+```
+
+```
+Write unit tests for the authenticate() function in lib/auth.ts
+```
+
+```
+Refactor the database queries in services/orders.ts to use transactions
+```
+
+The agent begins processing immediately. You see output appearing progressively in Telegram — each chunk of text arrives as the AI produces it, so you can read the beginning of a long response before it is finished.
+
+## Streaming output
+
+Output is streamed in real time from your agent to Telegram. For long responses, messages are split automatically at Telegram's 4096-character limit. You may see multiple messages appear in sequence for a single command.
+
+<Note>
+  Streaming means you see results as they are produced — not all at once at
+  the end. For a typical "fix this bug" task, you will often see the AI's
+  reasoning, the file it is editing, and the final diff, all appearing
+  progressively within a few seconds.
+</Note>
+
+## Aborting a running task
+
+If you want to stop the agent mid-task — for example, if it is taking too long or going in the wrong direction — send:
+
+```
+abort
+```
+
+The agent receives the abort signal via the Redis channel and terminates the current runner process. You receive a confirmation message. The agent then returns to the idle state and is ready for the next command.
+
+<Warning>
+  Aborting stops the AI mid-execution. If the runner was in the middle of
+  writing a file, the file may be in a partial state. Check your working
+  directory after aborting if you used a runner with file-write capability
+  (claude-sdk, claude-code, aider).
+</Warning>
+
+## Continuing a task
+
+If the AI produced a partial result and you want it to continue from where it left off, send:
+
+```
+continue
+```
+
+This is useful when the output was cut off or the AI indicated it needed more steps to finish.
+
+## Examples by category
+
+### Code review
+
+```
+Review the changes in the last git commit and point out any issues
+```
+
+```
+Check auth.ts for security vulnerabilities
+```
+
+### Bug fixing
+
+```
+I'm getting a 500 error on POST /api/checkout — fix it
+```
+
+```
+The tests in __tests__/cart.test.ts are failing — investigate and fix
+```
+
+### Feature development
+
+```
+Add a rate limiter to the /api/telegram route — max 10 requests per minute per user
+```
+
+```
+Create a new API endpoint GET /api/stats that returns total session count for the current user
+```
+
+### Explanation
+
+```
+Explain what the realtime.ts file does and how it connects to Supabase
+```
+
+```
+What does the pairing flow do step by step?
+```
+
+### Git
+
+```
+Show me the diff since yesterday
+```
+
+```
+Commit all staged changes with a meaningful commit message
+```
+
+## Message length and splitting
+
+Telegram has a hard limit of 4096 characters per message. RemoteAgent handles this automatically:
+
+- Output is split into consecutive messages at the character boundary
+- Code blocks are preserved — splits never happen in the middle of a code fence when possible
+- Very long diffs or file listings may produce several messages in sequence
+
+There is no limit on how long a task can take or how much output it can produce. The relay will keep forwarding chunks as long as the runner is producing them.
+
+## When the agent is busy
+
+If you send a command while the agent is still processing a previous one, the new command is queued. You will receive a message like:
+
+```
+Agent is busy — command queued. Send "abort" to cancel the current task.
+```

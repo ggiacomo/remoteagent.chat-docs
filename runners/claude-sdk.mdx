@@ -1,0 +1,71 @@
+---
+title: "claude-sdk"
+description: "The default runner. Uses the official @anthropic-ai/claude-code SDK in-process for the best performance and capability."
+---
+
+The `claude-sdk` runner is the default and recommended choice for most users. It uses Anthropic's `@anthropic-ai/claude-code` Node.js SDK directly within the agent process — no subprocess, no CLI binary, no shell invocation. The model runs in-process, which means lower latency, better error handling, and access to the full SDK feature set including tool use and streaming.
+
+## Requirements
+
+- An **Anthropic API key** (`sk-ant-...`). Get one at [console.anthropic.com](https://console.anthropic.com).
+- Node.js 20 or later (already required by RemoteAgent itself).
+- No additional binary to install.
+
+## Setup
+
+During `remoteagent init`, select `claude-sdk` (or press Enter to accept the default). When prompted for your API key, paste your Anthropic key:
+
+```bash
+remoteagent init
+# ? Which runner? claude-sdk
+# ? Anthropic API key: sk-ant-...
+```
+
+The key is saved to `~/.remoteagent/config.json` on your local machine. It is never transmitted to RemoteAgent servers.
+
+To use this runner from the command line without the interactive wizard:
+
+```bash
+remoteagent init --runner claude-sdk
+```
+
+## How it works
+
+When your agent receives a command from the Redis channel, the `claude-sdk` runner calls the `@anthropic-ai/claude-code` SDK with the prompt and the current working directory. The SDK handles:
+
+- Model selection (latest Claude model configured in the SDK)
+- Tool use (file read/write, bash execution, etc.)
+- Streaming output chunks back to the agent
+
+Each chunk is published to the output Redis channel as it arrives, so Telegram receives the response progressively rather than waiting for the full completion.
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Best output quality — full SDK capability | Requires a paid Anthropic API key |
+| Lowest latency — no subprocess overhead | API usage is billed per token |
+| Best error handling and retry logic | — |
+| Access to all Claude tools (bash, file I/O) | — |
+| No extra installation step | — |
+
+## API key security
+
+<Warning>
+  Your Anthropic API key is stored locally in `~/.remoteagent/config.json` and
+  is **never** sent to RemoteAgent servers or included in any network request
+  made by the relay. The SDK calls Anthropic's API directly from your machine.
+</Warning>
+
+The key is stored in plain text in the config file. Make sure `~/.remoteagent/` has appropriate permissions:
+
+```bash
+chmod 700 ~/.remoteagent
+chmod 600 ~/.remoteagent/config.json
+```
+
+## Costs
+
+API usage is billed by Anthropic based on input and output tokens. RemoteAgent does not add any markup or take a cut of API costs. Your Anthropic account is billed directly for all model usage.
+
+Refer to [Anthropic's pricing page](https://www.anthropic.com/pricing) for current token rates.

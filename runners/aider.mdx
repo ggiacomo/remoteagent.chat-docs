@@ -1,0 +1,107 @@
+---
+title: "aider"
+description: "Use Aider as the AI runner — open-source, multi-model, works with OpenAI, Anthropic, Ollama, and more."
+---
+
+[Aider](https://aider.chat) is an open-source AI pair programmer that works with a wide range of model providers. The `aider` runner invokes the `aider` CLI binary as a subprocess, making it a flexible choice if you want to use models other than Claude — including self-hosted models via Ollama.
+
+<Warning>
+  The Aider runner is currently in **beta**. Some edge cases in output parsing
+  and session handling may exist. If you encounter issues, please open an issue
+  on the [GitHub repository](https://github.com/remoteagent).
+</Warning>
+
+## Requirements
+
+- Python 3.9 or later
+- pip
+
+Install Aider:
+
+```bash
+pip install aider-chat
+```
+
+Verify the installation:
+
+```bash
+aider --version
+```
+
+## Model and API key configuration
+
+Aider reads model configuration from environment variables or its own config files. Configure your preferred model before using it with RemoteAgent.
+
+<CodeGroup>
+  ```bash OpenAI
+  export OPENAI_API_KEY=sk-...
+  # Aider defaults to gpt-4o when OPENAI_API_KEY is set
+  ```
+
+  ```bash Anthropic
+  export ANTHROPIC_API_KEY=sk-ant-...
+  # Use: aider --model claude-3-5-sonnet-20241022
+  ```
+
+  ```bash Ollama (local)
+  # Start Ollama with a model first
+  ollama pull llama3.2
+  # Then use: aider --model ollama/llama3.2
+  ```
+</CodeGroup>
+
+You can also create an `~/.aider.conf.yml` file to set defaults permanently. See [Aider's configuration docs](https://aider.chat/docs/config/aider_conf.html) for details.
+
+## Setup
+
+```bash
+remoteagent init --runner aider
+```
+
+Or choose `aider` when prompted by the interactive wizard. No API key is collected by RemoteAgent — Aider reads its own credentials from environment variables.
+
+## How it works
+
+The runner executes:
+
+```bash
+aider --message "<prompt>" --no-auto-commits --yes
+```
+
+Key flags:
+- `--message` passes the prompt non-interactively
+- `--no-auto-commits` prevents Aider from committing changes automatically (you remain in control of your git history)
+- `--yes` answers any confirmation prompts automatically (required for non-interactive operation)
+
+Output from stdout is streamed back to the Redis output channel as it arrives.
+
+## Aider with git
+
+By default, Aider is designed to work inside a git repository and uses git context to understand your codebase. Make sure your project directory is a git repo, or pass `--no-git` in your Aider config to disable git integration.
+
+```bash
+# Check if your project is a git repo
+git status
+```
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Open-source and auditable | Beta status — edge cases in output parsing |
+| Works with many model providers | Requires Python environment |
+| Supports local models via Ollama | More setup steps than claude-sdk |
+| No vendor lock-in | `--no-auto-commits` disables a key Aider feature |
+
+## Updating Aider
+
+```bash
+pip install --upgrade aider-chat
+aider --version
+```
+
+Restart the agent after updating:
+
+```bash
+remoteagent start
+```

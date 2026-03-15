@@ -1,0 +1,50 @@
+---
+title: "What is RemoteAgent?"
+description: "The managed Telegram bridge for any AI coding agent. Control Claude Code, Gemini CLI, Aider, and custom AI tools from your smartphone."
+---
+
+RemoteAgent is a lightweight relay that connects any AI coding agent running on your machine to a Telegram bot you control. Once paired, you can send natural-language prompts from anywhere — your phone, another computer, anywhere Telegram runs — and get streaming output back in real time.
+
+There is no cloud IDE, no remote execution environment, and no server you need to manage. Your agent runs on your own machine, with your own API keys, in your own project directory. RemoteAgent is purely a relay: it never sees your source code, your prompts in full context, or your API credentials.
+
+The setup takes under five minutes. Install the npm package, run `remoteagent init`, open [remoteagent.chat/connect](https://remoteagent.chat/connect) on your phone, enter the pairing code, and you're done.
+
+<CardGroup cols={2}>
+  <Card title="Any AI runner" icon="robot">
+    Works with Claude Code (SDK or CLI), Gemini CLI, Aider, OpenClaw, or any
+    custom binary that reads stdin and writes stdout. Switch runners at any time
+    with a single flag.
+  </Card>
+  <Card title="Telegram interface" icon="paper-plane">
+    No custom app to install. Use the Telegram client you already have. Commands
+    stream back as messages in real time, split automatically when they exceed
+    Telegram's 4096-character limit.
+  </Card>
+  <Card title="Zero trust relay" icon="shield-check">
+    Your API key never leaves your machine. RemoteAgent routes messages between
+    Telegram and your local agent — it does not store prompts, code diffs, or
+    credentials at any point.
+  </Card>
+  <Card title="5-minute setup" icon="bolt">
+    One npm install, one init command, one pairing code. No Docker, no
+    configuration files to write by hand, no infrastructure to provision.
+  </Card>
+</CardGroup>
+
+## How it works
+
+1. You install `remoteagent` globally on the machine where your AI agent will run.
+2. You run `remoteagent init`, choose your AI runner, and receive a short pairing code.
+3. You open [remoteagent.chat/connect](https://remoteagent.chat/connect), log in with the Telegram widget, and enter the code. The bot is now linked to your agent.
+4. From that point on, any message you send to the bot is forwarded to your agent. Output streams back to Telegram as it is produced.
+
+The relay uses Redis pub/sub channels scoped to your agent ID. The web app (running on Vercel) receives Telegram webhooks, publishes commands to Redis, and subscribes to the output channel to forward chunks back to Telegram. Your local agent subscribes to its own command channel and publishes output. No polling, no persistent connections from the server side.
+
+## Compatibility
+
+<Note>
+  RemoteAgent requires **Node.js 20 or later** on the machine running the agent.
+  The agent package runs on Linux, macOS, and Windows (WSL recommended on
+  Windows). The runner you choose may have additional prerequisites — see the
+  [Runners](/runners/overview) section for details.
+</Note>

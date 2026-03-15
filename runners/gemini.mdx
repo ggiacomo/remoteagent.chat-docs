@@ -1,0 +1,85 @@
+---
+title: "gemini"
+description: "Use Google Gemini CLI as the AI runner. Free tier available — no credit card required."
+---
+
+The `gemini` runner invokes the Google Gemini CLI binary as a subprocess. This is the easiest way to get started without any API costs — Google's free tier provides a generous number of requests per day with no credit card required.
+
+<Warning>
+  The Gemini runner is currently in **beta**. Output parsing edge cases may
+  exist. If you encounter unexpected behavior or formatting issues, please open
+  an issue on the [GitHub repository](https://github.com/remoteagent).
+</Warning>
+
+## Requirements
+
+- The `gemini` CLI installed globally:
+
+  ```bash
+  npm install -g @google/gemini-cli
+  ```
+
+- A Google account for authentication. The free tier does not require a credit card.
+- Node.js 20 or later.
+
+Verify the binary:
+
+```bash
+gemini --version
+```
+
+## Authentication
+
+The Gemini CLI uses Google OAuth for authentication. On first run, it opens a browser window to complete the login flow:
+
+```bash
+gemini auth login
+```
+
+After authenticating, credentials are cached locally. The agent uses these cached credentials when invoking the Gemini CLI — no API key needs to be entered during `remoteagent init`.
+
+## Setup
+
+```bash
+remoteagent init --runner gemini
+```
+
+Or choose `gemini` when prompted by the interactive wizard. Since no API key is required for the free tier, the wizard will skip the API key prompt.
+
+## How it works
+
+The runner executes:
+
+```bash
+gemini "<prompt>"
+```
+
+Output is captured from stdout and streamed back to the Redis channel. The Gemini CLI writes its response progressively, so Telegram receives chunks as they arrive.
+
+## Free tier limits
+
+Google's free tier for Gemini CLI provides a daily quota of requests. For most development tasks — reviewing a file, fixing a bug, writing tests — you are unlikely to hit the limit during normal usage.
+
+If you need higher throughput or want to use Gemini via an API key (for the Gemini API), you can set the `GEMINI_API_KEY` environment variable before starting the agent. The `gemini` CLI will use the API key instead of the OAuth flow.
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Free tier — no credit card required | Beta status — some output parsing edge cases |
+| No API key to manage for free usage | Daily rate limits on the free tier |
+| Access to Gemini 2.x models | Subprocess overhead per invocation |
+| — | Less capable than Claude for complex coding tasks (varies by task) |
+
+## Updating the binary
+
+```bash
+npm update -g @google/gemini-cli
+gemini --version
+```
+
+Restart the agent after updating:
+
+```bash
+remoteagent start
+```

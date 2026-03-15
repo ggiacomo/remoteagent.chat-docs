@@ -1,0 +1,92 @@
+---
+title: "Quickstart"
+description: "From zero to a working Telegram-controlled AI agent in under five minutes."
+---
+
+<Note>
+  Your API key never leaves your machine. RemoteAgent is a pure relay — it
+  routes messages between Telegram and your local agent without storing or
+  inspecting your credentials, prompts, or code.
+</Note>
+
+<Steps>
+  <Step title="Install the agent">
+    Install the `remoteagent` package globally using npm:
+
+    ```bash
+    npm install -g remoteagent
+    ```
+
+    Verify the installation:
+
+    ```bash
+    remoteagent --version
+    ```
+
+    You should see the current version number printed to stdout. If you get a
+    "command not found" error, make sure your npm global bin directory is on
+    your `PATH`.
+
+    **Requirements:** Node.js 20 or later. Run `node --version` to check.
+  </Step>
+
+  <Step title="Run the init wizard">
+    Navigate to the project directory you want to control, then run:
+
+    ```bash
+    cd /path/to/your/project
+    remoteagent init
+    ```
+
+    The interactive wizard will ask you:
+
+    - **Project name** — a human-readable label shown in the dashboard and bot messages.
+    - **Runner** — which AI engine to use. Press Enter to accept the default (`claude-sdk`), or type a runner name. See [Runners](/runners/overview) for the full list.
+    - **API key** — only required for runners that need one (e.g., `claude-sdk`, `claude-code`). Stored locally in `~/.remoteagent/config.json`, never transmitted.
+
+    At the end of the wizard you will see a **pairing code** — a short alphanumeric string like `XK9-4TZ`.
+
+    <Warning>
+      The pairing code expires in **10 minutes** and can only be used once.
+      If it expires, run `remoteagent init` again to generate a new one.
+    </Warning>
+  </Step>
+
+  <Step title="Connect via Telegram">
+    Open [remoteagent.chat/connect](https://remoteagent.chat/connect) in your browser (phone or desktop).
+
+    1. Click **Login with Telegram** and authenticate with the Telegram widget.
+    2. Enter the pairing code from the previous step.
+    3. Click **Connect**.
+
+    The page will confirm the pairing. Your Telegram bot is now linked to your agent. You will also receive a confirmation message directly in Telegram.
+  </Step>
+
+  <Step title="Send your first command">
+    Open Telegram, find the **RemoteAgent bot** (a link is shown after pairing), and send a message:
+
+    ```
+    List the files in this project and describe what each one does
+    ```
+
+    The agent will start running immediately. Output streams back to Telegram in real time as the AI produces it. Long responses are split into multiple messages automatically.
+
+    Try a more targeted task:
+
+    ```
+    Fix any TypeScript errors in src/api/users.ts
+    ```
+
+    To abort a running task at any time, send:
+
+    ```
+    abort
+    ```
+  </Step>
+</Steps>
+
+## What's next
+
+- Learn about all available [runners](/runners/overview) and how to switch between them.
+- Set up [multiple projects](/bot/multi-project) to control different codebases from the same bot.
+- Explore the [dashboard](/dashboard) to view session history and manage your account.

@@ -1,88 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "RemoteAgent",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1B84FF",
+    "light": "#60AEFF",
+    "dark": "#0D5ECC"
   },
   "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
@@ -90,33 +15,93 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "remoteagent.chat",
+        "href": "https://remoteagent.chat"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Get started free",
+      "href": "https://remoteagent.chat/login"
     }
   },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["introduction"]
+          },
+          {
+            "group": "Getting Started",
+            "pages": [
+              "getting-started/quickstart",
+              "getting-started/installation",
+              "getting-started/pairing"
+            ]
+          },
+          {
+            "group": "Runners",
+            "pages": [
+              "runners/overview",
+              "runners/claude-sdk",
+              "runners/claude-code",
+              "runners/gemini",
+              "runners/aider",
+              "runners/openclaw",
+              "runners/custom"
+            ]
+          },
+          {
+            "group": "Using the Bot",
+            "pages": [
+              "bot/sending-commands",
+              "bot/multi-project",
+              "bot/offline-alerts"
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "dashboard",
+              "pricing"
+            ]
+          },
+          {
+            "group": "Under the Hood",
+            "pages": [
+              "under-the-hood/architecture",
+              "under-the-hood/services",
+              "under-the-hood/security"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": ["faq"]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "remoteagent.chat",
+          "href": "https://remoteagent.chat",
+          "icon": "house"
+        },
+        {
+          "anchor": "Telegram bot",
+          "href": "https://t.me/remoteagent_bot",
+          "icon": "paper-plane"
+        }
+      ]
+    }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/ggiacomo/docs"
     }
   }
 }

@@ -1,0 +1,86 @@
+---
+title: "Offline alerts"
+description: "Get notified immediately when your agent goes offline, and learn how to bring it back."
+---
+
+RemoteAgent monitors the connection status of your agents in real time. When an agent disconnects — whether due to a crash, a machine reboot, or a lost network connection — the bot sends you a Telegram notification immediately.
+
+## How it works
+
+When an agent starts, it establishes a subscription to its Redis command channel. The web app tracks the agent's heartbeat. If the heartbeat stops (the agent disconnects without sending a graceful shutdown), the agent's status is set to `offline` in the database and the bot sends you a message:
+
+```
+Your agent "my-api" went offline.
+Last seen: just now
+
+Run remoteagent start in your project directory to bring it back.
+```
+
+## Plan availability
+
+| Plan | Offline alerts |
+|---|---|
+| Trial | Included (Pro features for 14 days) |
+| Solo | Included |
+| Pro | Included |
+| Team | Included |
+
+Offline alerts are available on all paid plans and during the trial period.
+
+## Restarting the agent
+
+When you receive an offline alert, restart the agent on your machine:
+
+```bash
+cd /path/to/your/project
+remoteagent start
+```
+
+Or by project name from any directory:
+
+```bash
+remoteagent start "my-api"
+```
+
+The agent reconnects to the Redis channel and immediately resumes accepting commands. The bot sends a confirmation:
+
+```
+Your agent "my-api" is back online.
+```
+
+## Automatic reconnection
+
+The agent has built-in reconnection logic. If the Redis connection drops temporarily (e.g., a brief network blip), the agent attempts to reconnect automatically with exponential backoff. You will only receive an offline alert if the connection cannot be restored within the reconnection window.
+
+This means transient network issues are handled silently — you only get notified for meaningful outages.
+
+## Setting up automatic restarts
+
+To minimize downtime without manual intervention, run the agent as a supervised process that restarts automatically:
+
+<CodeGroup>
+  ```bash pm2
+  pm2 start "remoteagent start" --name my-api --cwd /path/to/project
+  pm2 save
+  pm2 startup
+  # Follow the instructions pm2 prints to enable startup on boot
+  ```
+
+  ```bash systemd
+  # Create /etc/systemd/system/remoteagent-myapi.service
+  # (see the Multi-project page for the full unit file)
+  systemctl enable remoteagent-myapi
+  systemctl start remoteagent-myapi
+  ```
+</CodeGroup>
+
+With a process supervisor, the agent restarts within seconds of a crash. You may still receive a brief offline alert (sent the moment the process exits), followed shortly by an online notification when the process supervisor brings it back.
+
+## Checking agent status manually
+
+You can check the status of all your agents at any time by sending `/agents` to the bot, or by visiting the [dashboard](https://remoteagent.chat/dashboard).
+
+The dashboard shows:
+- Current status (online / offline)
+- Last seen timestamp
+- Number of active sessions

@@ -1,0 +1,70 @@
+---
+title: "claude-code"
+description: "Run Claude Code as an external CLI binary instead of the in-process SDK."
+---
+
+The `claude-code` runner invokes the `claude` CLI binary as a subprocess rather than using the SDK in-process. This produces the same model output as `claude-sdk` but runs in a separate process, which can be useful for isolation, reproducibility, or when you want full control over the `claude` binary version independently of the RemoteAgent package.
+
+## Requirements
+
+- The `claude` CLI installed globally:
+
+  ```bash
+  npm install -g @anthropic-ai/claude-code
+  ```
+
+- An **Anthropic API key**. The `claude` binary reads it from the same local config RemoteAgent uses, or from the `ANTHROPIC_API_KEY` environment variable.
+- Node.js 20 or later.
+
+Verify the binary is available:
+
+```bash
+claude --version
+```
+
+## Setup
+
+```bash
+remoteagent init --runner claude-code
+```
+
+Or choose `claude-code` when prompted by the interactive wizard.
+
+## Difference from claude-sdk
+
+Both runners use the same underlying Claude model and produce equivalent output. The key differences are:
+
+| | claude-sdk | claude-code |
+|---|---|---|
+| Execution | In-process (Node.js) | Subprocess (`claude` binary) |
+| Startup overhead | None | ~200–500ms per invocation |
+| Process isolation | Shared with agent | Separate OS process |
+| Binary version control | Tied to SDK version in package | Independent — update with `npm update -g @anthropic-ai/claude-code` |
+| Error output | Structured SDK errors | Raw CLI stderr |
+
+For most users, `claude-sdk` is the better choice. Use `claude-code` if you specifically need process isolation or want to pin the `claude` binary to a particular version.
+
+## How it works
+
+The runner executes:
+
+```bash
+claude -p "<prompt>" --dangerously-skip-permissions
+```
+
+The `--dangerously-skip-permissions` flag is required because the agent runs non-interactively — there is no user present to approve individual tool calls. RemoteAgent runs this on your own machine, so the permissions boundary is the same as running `claude` manually.
+
+Output is captured from stdout and streamed back to the Redis output channel chunk by chunk.
+
+## Updating the binary
+
+```bash
+npm update -g @anthropic-ai/claude-code
+claude --version
+```
+
+Restart the agent after updating:
+
+```bash
+remoteagent start
+```

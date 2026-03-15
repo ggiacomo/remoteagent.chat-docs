@@ -1,0 +1,96 @@
+---
+title: "Pricing"
+description: "RemoteAgent plans and pricing. Start free with a 14-day trial — no credit card required."
+---
+
+## Plans
+
+<CardGroup cols={4}>
+  <Card title="Trial" icon="clock">
+    **Free** — 14 days
+
+    Full Pro access with no credit card required. Everything enabled from day one.
+  </Card>
+  <Card title="Solo" icon="user">
+    **$5 / month**
+
+    Up to 3 projects. 1 Telegram user. Best for individual developers.
+  </Card>
+  <Card title="Pro" icon="star">
+    **$12 / month**
+
+    Unlimited projects. 1 Telegram user. Best for power users and freelancers.
+  </Card>
+  <Card title="Team" icon="users">
+    **$29 / month**
+
+    Unlimited projects. Up to 5 Telegram users. Best for small teams.
+  </Card>
+</CardGroup>
+
+## Feature comparison
+
+| Feature | Trial | Solo | Pro | Team |
+|---|---|---|---|---|
+| Price | Free | $5/mo | $12/mo | $29/mo |
+| Duration | 14 days | Monthly | Monthly | Monthly |
+| Credit card required | No | Yes | Yes | Yes |
+| Projects | Unlimited | 3 | Unlimited | Unlimited |
+| Telegram users | 1 | 1 | 1 | 5 |
+| All runners | Yes | Yes | Yes | Yes |
+| Session history | Yes | Yes | Yes | Yes |
+| Offline alerts | Yes | Yes | Yes | Yes |
+| Team management | No | No | No | Yes |
+
+## Trial details
+
+The trial gives you full Pro access for 14 days with no credit card required. You can pair agents, run sessions, and use all runners without any limitations.
+
+During the trial, the bot sends you reminder notifications as the end date approaches:
+
+| Day | Message |
+|---|---|
+| Day 0 (signup) | Trial activated — 14 days of Pro access. Get started with `remoteagent init` |
+| Day 10 | 4 days remaining — upgrade to keep your agents running |
+| Day 13 | Trial ends tomorrow — your projects are safe, choose a plan to reactivate |
+| Day 14 | Trial ended — select a plan to reactivate |
+
+Each reminder includes a button that opens Stripe Checkout directly.
+
+<Note>
+  **Your data is always safe.** When the trial ends (or a subscription lapses),
+  your agents, session history, and configuration are preserved. Reactivation
+  is automatic within 30 seconds of a successful payment.
+</Note>
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Can I upgrade or downgrade at any time?">
+    Yes. Open the [billing portal](https://remoteagent.chat/dashboard) from your dashboard and change your plan. Upgrades take effect immediately. Downgrades take effect at the end of the current billing period.
+  </Accordion>
+
+  <Accordion title="What happens when my trial ends?">
+    Your agents stop accepting commands and the bot sends you a notification. All your data — agents, session history, configuration — is preserved. Choose any paid plan and your agents are reactivated within 30 seconds of payment confirmation, with no reinstallation needed.
+  </Accordion>
+
+  <Accordion title="What happens if my subscription lapses or payment fails?">
+    If a payment fails, Stripe retries automatically over several days. Your plan status changes to `past_due` and the bot notifies you. If the payment cannot be collected, your subscription moves to `canceled` and agents stop accepting commands — same behavior as trial expiry. Your data is retained and reactivation is instant once payment is resolved.
+  </Accordion>
+
+  <Accordion title="Can I cancel anytime?">
+    Yes. Cancel from the billing portal at any time. Your plan remains active until the end of the current billing period, then moves to canceled. No questions asked, no cancellation fees.
+  </Accordion>
+
+  <Accordion title="Is there an annual billing option?">
+    Not currently. All plans are billed monthly. Annual billing may be added in a future update.
+  </Accordion>
+
+  <Accordion title="Do you offer refunds?">
+    If you have an issue with billing, contact support via the bot (`/support`) or email. Refunds are handled case by case.
+  </Accordion>
+
+  <Accordion title="I'm on the Solo plan but need more than 3 projects. What do I do?">
+    Upgrade to the Pro plan for unlimited projects. You can upgrade directly from the dashboard at any time.
+  </Accordion>
+</AccordionGroup>
