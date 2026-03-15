@@ -99,6 +99,10 @@
       ]
     }
   },
+  "seo": {
+    "indexHiddenPages": false,
+    "noindex": true
+  },
   "footer": {
     "socials": {
       "github": "https://github.com/ggiacomo/docs"
