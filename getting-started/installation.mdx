@@ -1,16 +1,12 @@
 ---
 title: "Installation"
-description: "Install the RemoteAgent package and verify your environment before running the init wizard."
+description: "Install the RemoteAgent binary and verify your environment before running the init wizard."
 ---
 
 ## Requirements
 
-Before installing, make sure the machine where the agent will run meets these requirements:
-
 | Requirement | Minimum version | How to check |
 |---|---|---|
-| Node.js | 20.x or later | `node --version` |
-| npm | 9.x or later | `npm --version` |
 | OS | Linux, macOS, Windows (WSL) | — |
 
 <Note>
@@ -19,28 +15,12 @@ Before installing, make sure the machine where the agent will run meets these re
   guaranteed.
 </Note>
 
-If you need to install or upgrade Node.js, the recommended approach is using a version manager:
-
-<CodeGroup>
-  ```bash nvm (Linux/macOS)
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-  nvm install 20
-  nvm use 20
-  ```
-
-  ```bash fnm (cross-platform, faster)
-  curl -fsSL https://fnm.vercel.app/install | bash
-  fnm install 20
-  fnm use 20
-  ```
-</CodeGroup>
-
 ## Install RemoteAgent
 
-Install the package globally so the `remoteagentchat` command is available from any directory:
+Download and install the binary with a single command:
 
 ```bash
-npm install -g remoteagentchat
+curl -fsSL https://remoteagent.chat/install | bash
 ```
 
 ### Verify the installation
@@ -52,26 +32,12 @@ remoteagentchat --version
 Expected output:
 
 ```
-remoteagentchat/x.y.z linux-x64 node-v20.x.x
-```
-
-If you see `command not found`, your npm global bin directory is not on your `PATH`. Fix it by adding the output of `npm config get prefix` followed by `/bin` to your shell profile:
-
-```bash
-# Find the global bin path
-npm config get prefix
-# Example output: /home/youruser/.npm-global
-
-# Add to ~/.bashrc or ~/.zshrc
-export PATH="$HOME/.npm-global/bin:$PATH"
-
-# Reload
-source ~/.bashrc
+remoteagentchat x.y.z
 ```
 
 ## Runner prerequisites
 
-The `remoteagentchat` package itself has no runtime dependencies beyond Node.js. However, the AI runner you choose requires its own tooling installed separately.
+RemoteAgent itself has no additional dependencies. However, the AI runner you choose may require its own tooling installed separately.
 
 ### claude-sdk (default)
 
@@ -120,21 +86,18 @@ No specific prerequisites — any binary that reads from stdin and writes to std
 
 ## Updating
 
-To update to the latest version of RemoteAgent:
+To update to the latest version of RemoteAgent, re-run the install command:
 
 ```bash
-npm update -g remoteagentchat
-remoteagentchat --version
+curl -fsSL https://remoteagent.chat/install | bash
 ```
 
 ## Uninstalling
 
-```bash
-npm uninstall -g remoteagentchat
-```
-
-This removes the binary. Local configuration stored in `~/.remoteagent/` is not deleted automatically. Remove it manually if needed:
+Remove the binary and optionally the local configuration:
 
 ```bash
+rm $(which remoteagentchat)
+# Optional: remove local config
 rm -rf ~/.remoteagent
 ```

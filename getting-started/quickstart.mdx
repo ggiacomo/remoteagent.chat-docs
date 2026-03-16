@@ -11,10 +11,10 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
 
 <Steps>
   <Step title="Install the agent">
-    Install the `remoteagentchat` package globally using npm:
+    Download and install the RemoteAgent binary with a single command:
 
     ```bash
-    npm install -g remoteagentchat
+    curl -fsSL https://remoteagent.chat/install | bash
     ```
 
     Verify the installation:
@@ -23,11 +23,7 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
     remoteagentchat --version
     ```
 
-    You should see the current version number printed to stdout. If you get a
-    "command not found" error, make sure your npm global bin directory is on
-    your `PATH`.
-
-    **Requirements:** Node.js 20 or later. Run `node --version` to check.
+    You should see the current version number printed to stdout.
   </Step>
 
   <Step title="Get your pairing code from the dashboard">
