@@ -1,0 +1,79 @@
+---
+title: "opencode"
+description: "Use OpenCode as the AI runner — open-source terminal AI coding agent by the SST team, supports multiple providers."
+---
+
+[OpenCode](https://opencode.ai) is an open-source terminal-based AI coding agent built by the SST team. The `opencode` runner invokes `opencode run` as a subprocess, allowing you to use it non-interactively with any supported AI provider.
+
+## Requirements
+
+- Node.js 18 or later
+- npm
+
+Install OpenCode:
+
+```bash
+npm install -g opencode-ai
+```
+
+Verify the installation:
+
+```bash
+opencode --version
+```
+
+## Model and API key configuration
+
+OpenCode reads model configuration from environment variables. Set your preferred provider's API key before using it with RemoteAgent.
+
+<CodeGroup>
+  ```bash Anthropic
+  export ANTHROPIC_API_KEY=sk-ant-...
+  ```
+
+  ```bash OpenAI
+  export OPENAI_API_KEY=sk-...
+  ```
+</CodeGroup>
+
+To specify a model, use the `--model` flag or configure it in your OpenCode settings. See [OpenCode's documentation](https://opencode.ai/docs) for the full list of supported providers.
+
+## Setup
+
+```bash
+remoteagentchat init --runner opencode
+```
+
+Or choose `opencode` when prompted by the interactive wizard. No API key is collected by RemoteAgent — OpenCode reads its own credentials from environment variables.
+
+## How it works
+
+The runner executes:
+
+```bash
+opencode run "<prompt>"
+```
+
+Output from stdout is streamed back to the Redis output channel as it arrives.
+
+## Pros and cons
+
+| Pros | Cons |
+|---|---|
+| Open-source and auditable | Beta status — edge cases may exist |
+| Supports multiple AI providers | Requires Node.js environment |
+| No vendor lock-in | Less battle-tested than claude-sdk or aider |
+| Active development by SST team | |
+
+## Updating OpenCode
+
+```bash
+npm install -g opencode-ai@latest
+opencode --version
+```
+
+Restart the agent after updating:
+
+```bash
+remoteagentchat start
+```
