@@ -26,13 +26,13 @@ curl -fsSL https://remoteagent.chat/install | bash
 ### Verify the installation
 
 ```bash
-remoteagentchat --version
+remoteagent --version
 ```
 
 Expected output:
 
 ```
-remoteagentchat x.y.z
+remoteagent x.y.z
 ```
 
 ## Runner prerequisites
@@ -41,7 +41,7 @@ RemoteAgent itself has no additional dependencies. However, the AI runner you ch
 
 ### claude-sdk (default)
 
-No additional binary needed. The runner uses the `@anthropic-ai/claude-code` SDK in-process. You will need an **Anthropic API key**, which you provide during `remoteagentchat init` and is stored locally in `~/.remoteagent/config.json`.
+No additional binary needed. The runner uses the `@anthropic-ai/claude-code` SDK in-process. You will need an **Anthropic API key**, which you provide during `remoteagent init` and is stored locally in `~/.remoteagent/config.json`.
 
 ### claude-code
 
@@ -97,7 +97,7 @@ curl -fsSL https://remoteagent.chat/install | bash
 Remove the binary and optionally the local configuration:
 
 ```bash
-rm $(which remoteagentchat)
+rm $(which remoteagent)
 # Optional: remove local config
 rm -rf ~/.remoteagent
 ```
