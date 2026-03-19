@@ -99,16 +99,19 @@ The database is not involved in the real-time message relay path. It is only rea
 ## Pairing flow
 
 ```
-1. remoteagent init
+1. User opens remoteagent.chat/dashboard
+   → Authenticates with Telegram Login Widget (user ID verified by Telegram)
+   → Clicks "Pair new agent", enters project name
    → POST /api/pair { projectName }
    → Server generates pairing code, stores in DB with 10-minute TTL
-   → Returns { code: "XK9-4TZ" } to CLI
+   → Dashboard displays code: "XK9-4TZ"
 
-2. User opens remoteagent.chat/connect
-   → Authenticates with Telegram widget (user ID verified by Telegram)
-   → Enters code → POST /api/pair/confirm { code }
+2. remoteagent init (on your machine)
+   → Interactive wizard: runner, API key, pairing code
+   → User pastes the code from the dashboard
+   → CLI → POST /api/pair/confirm { code }
    → Server verifies code, creates agent record, issues JWT
-   → Publishes { event: "paired", payload: { jwt, agentId } } to Redis
+   → Publishes { event: "paired", payload: { agentToken, agentId } } to Redis
 
 3. Agent CLI receives "paired" event
    → Saves JWT and agentId to ~/.remoteagent/agents/{agentId}.json
