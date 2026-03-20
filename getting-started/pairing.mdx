@@ -71,9 +71,51 @@ If you need to re-pair an agent (for example, after switching Telegram accounts)
 
 ## Where configuration is stored
 
-After pairing, the agent's credentials are stored in two places on your machine:
+After pairing, the agent's credentials are stored in two files on your machine:
 
-- `~/.remoteagent/config.json` — global settings (API key, preferred language)
-- `~/.remoteagent/agents/{agentId}.json` — per-agent settings (agent ID, token, project path, runner, Redis URL)
+### Global config — `~/.remoteagent/config.json`
 
-Neither file is ever read by the RemoteAgent servers. The agent token in the per-agent config is a JWT used only to authenticate Redis channel subscriptions — it does not grant access to your files or API keys.
+Shared across all agents on the machine:
+
+```json
+{
+  "anthropicApiKey": "sk-ant-...",
+  "preferredLanguage": "en"
+}
+```
+
+Update it at any time with:
+
+```bash
+remoteagent config --api-key sk-ant-...
+remoteagent config --language Italian
+```
+
+### Per-agent config — `~/.remoteagent/agents/{agentId}.json`
+
+One file per paired agent:
+
+```json
+{
+  "agentId": "a1b2c3d4-...",
+  "agentToken": "...",
+  "projectPath": "/home/you/my-project",
+  "projectName": "my-project",
+  "runner": "claude-sdk",
+  "redisUrl": "rediss://...",
+  "apiBaseUrl": "https://remoteagent.chat"
+}
+```
+
+Update the project path or name without re-pairing:
+
+```bash
+remoteagent config --agent a1b2c3d4 --path /new/path
+remoteagent config --agent a1b2c3d4 --name new-name
+```
+
+<Note>
+  Neither file is ever read by the RemoteAgent servers. The `agentToken` is a
+  JWT used only to authenticate the Redis relay channel — it does not grant
+  access to your files, source code, or API keys.
+</Note>

@@ -69,10 +69,10 @@ description: "Answers to common questions about RemoteAgent setup, security, bil
   </Accordion>
 
   <Accordion title="How do I update the agent?">
-    Update the global npm package:
+    Re-run the installer to get the latest version:
 
     ```bash
-    npm update -g remoteagent
+    curl -fsSL https://remoteagent.chat/install | bash
     remoteagent --version
     ```
 
