@@ -13,7 +13,7 @@ The `claude-code` runner invokes the `claude` CLI binary as a subprocess rather 
   npm install -g @anthropic-ai/claude-code
   ```
 
-- An **Anthropic API key**. The `claude` binary reads it from the same local config RemoteAgent uses, or from the `ANTHROPIC_API_KEY` environment variable.
+- Authentication — either a **long-lived OAuth token** (recommended) or an interactive login via `claude login`. See [Authentication](#authentication) below.
 - Node.js 20 or later.
 
 Verify the binary is available:
@@ -29,6 +29,42 @@ remoteagent init --runner claude-code
 ```
 
 Or choose `claude-code` when prompted by the interactive wizard.
+
+## Authentication
+
+The `claude` binary must be authenticated before the agent can use it. There are two methods:
+
+### Option A — Long-lived OAuth token (recommended)
+
+Generate a token once with:
+
+```bash
+claude setup-token
+```
+
+This creates a token of the form `sk-ant-oat01-xxxxx...xxxxx` that is **valid for one year** and works on any machine without re-login.
+
+<Warning>
+  `claude setup-token` requires an active **Claude Pro or Max** subscription.
+  The token is shown only once — copy it immediately before closing the terminal.
+</Warning>
+
+During `remoteagent init`, the wizard will ask for this token and store it securely in `~/.remoteagent/agents/{agentId}.json`. The token is injected as the `CLAUDE_CODE_OAUTH_TOKEN` environment variable each time the `claude` binary is invoked — no shell export needed.
+
+### Option B — Interactive login (fallback)
+
+If you do not have a Pro/Max subscription, authenticate with:
+
+```bash
+claude login
+```
+
+This stores a session credential managed by the `claude` CLI itself. Sessions expire periodically and must be renewed manually by running `claude login` again on the same machine.
+
+<Note>
+  The interactive login must be performed on the same machine where the agent runs.
+  It is not portable across machines, unlike the OAuth token.
+</Note>
 
 ## Difference from claude-sdk
 

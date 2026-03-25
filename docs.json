@@ -80,6 +80,10 @@
             ]
           },
           {
+            "group": "Reference",
+            "pages": ["cli-reference"]
+          },
+          {
             "group": "Support",
             "pages": ["faq"]
           }

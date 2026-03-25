@@ -1,0 +1,182 @@
+---
+title: "CLI reference"
+description: "Complete reference for all remoteagent CLI commands."
+---
+
+RemoteAgent runs as a background process on your machine, listening for Telegram commands and forwarding them to your AI runner. All configuration is stored locally in `~/.remoteagent/` — nothing is ever sent to the RemoteAgent servers except the relay messages.
+
+## Commands
+
+### `remoteagent init`
+
+Set up a new agent and pair it with your Telegram bot.
+
+```bash
+remoteagent init
+```
+
+Launches an interactive wizard that asks for:
+
+- **Runner** — which AI engine to use (see [Runners](/runners/overview))
+- **Authentication** — API key or OAuth token, depending on the runner
+- **Pairing code** — generated from the [dashboard](https://remoteagent.chat/dashboard)
+
+**Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--runner <type>` | Skip runner selection. Options: `opencode`, `claude-sdk`, `claude-code`, `gemini`, `aider`, `openclaw`, `custom` |
+| `--runner-bin <path>` | Binary path — required when `--runner custom` is used |
+
+```bash
+remoteagent init --runner opencode
+remoteagent init --runner claude-code
+remoteagent init --runner custom --runner-bin /usr/local/bin/my-ai-tool
+```
+
+---
+
+### `remoteagent start [name] [-f] [-v]`
+
+Start an agent. Runs in background by default.
+
+```bash
+remoteagent start              # start the only configured agent
+remoteagent start my-project   # start a specific agent by project name
+remoteagent start -f           # run in foreground (keep terminal open)
+remoteagent start -v           # run in foreground with verbose logs
+```
+
+| Flag | Description |
+|------|-------------|
+| `-f` | Foreground mode — process stays attached to the terminal |
+| `-v` | Verbose mode — implies `-f`, shows detailed logs |
+
+---
+
+### `remoteagent stop [name]`
+
+Stop a running background agent.
+
+```bash
+remoteagent stop
+remoteagent stop my-project
+```
+
+---
+
+### `remoteagent logs [name]`
+
+Tail the log file of a background agent in real time.
+
+```bash
+remoteagent logs
+remoteagent logs my-project
+```
+
+Logs are stored in `~/.remoteagent/agents/{agentId}.log`.
+
+---
+
+### `remoteagent config`
+
+Interactively update settings: API key, preferred language, and per-agent project path or name.
+
+```bash
+remoteagent config
+```
+
+You can also pass flags directly:
+
+```bash
+remoteagent config --api-key sk-ant-...
+remoteagent config --language Italian
+remoteagent config --agent <agentId> --path /new/path/to/project
+remoteagent config --agent <agentId> --name new-project-name
+```
+
+---
+
+### `remoteagent set-path [name]`
+
+Shortcut to update the project directory for an agent without going through the full `config` menu.
+
+```bash
+remoteagent set-path
+remoteagent set-path my-project
+```
+
+---
+
+### `remoteagent remove [name]`
+
+Remove an agent: stops it, deletes its local config, and unregisters it from the server.
+
+```bash
+remoteagent remove
+remoteagent remove my-project
+```
+
+<Warning>
+  This action is irreversible. The agent will need to be re-paired from scratch
+  if you want to use it again.
+</Warning>
+
+---
+
+### `remoteagent startall`
+
+Start (or restart) all configured agents in background. Useful for reboots or after `reinstall`.
+
+```bash
+remoteagent startall
+```
+
+---
+
+### `remoteagent reinstall`
+
+Download and install the latest version of RemoteAgent, then restart all running agents.
+
+```bash
+remoteagent reinstall
+```
+
+Equivalent to running the install script again:
+
+```bash
+curl -fsSL https://remoteagent.chat/install | bash
+```
+
+---
+
+### `remoteagent list`
+
+Show all configured agents and their current status (online / offline).
+
+```bash
+remoteagent list
+```
+
+---
+
+### `remoteagent help`
+
+Show the built-in help message with all available commands.
+
+```bash
+remoteagent help
+```
+
+---
+
+## Configuration files
+
+All config is stored locally. Nothing is transmitted to RemoteAgent servers except relay messages.
+
+| File | Contents |
+|------|----------|
+| `~/.remoteagent/config.json` | Global settings: API key, preferred language |
+| `~/.remoteagent/agents/{agentId}.json` | Per-agent: credentials, project path, runner choice |
+| `~/.remoteagent/agents/{agentId}.log` | Runtime logs for each agent |
+| `~/.remoteagent/agents/{agentId}.pid` | PID file for background process detection |
