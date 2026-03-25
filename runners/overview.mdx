@@ -11,11 +11,22 @@ A **runner** is the AI engine that processes your prompts. RemoteAgent acts as t
 |---|---|---|---|---|
 | `opencode` | CLI binary | Stable | nothing (or optional API key) | Default choice, no API key needed, 75+ providers |
 | `claude-sdk` | In-process SDK | Stable | Anthropic API key | Best quality with Anthropic models |
-| `claude-code` | CLI binary | Stable | `claude` CLI + API key | Same capability, external process |
+| `claude-code` | CLI binary | Stable | `claude` CLI + auth (OAuth token, `claude login`, or `ANTHROPIC_API_KEY`) | Same capability, external process |
 | `gemini` | CLI binary | Beta | Google account (free tier available) | No-cost option for Gemini models |
 | `aider` | CLI binary | Beta | Python, pip, model API key | model selection + architect mode via wizard |
 | `openclaw` | HTTP gateway | Stable | openclaw daemon running (configure with openclaw's own wizard first) | Self-hosted AI gateway |
 | `custom` | CLI binary | Stable | Your binary on PATH | Any AI tool with stdin/stdout interface |
+
+<Warning>
+  If you have `ANTHROPIC_API_KEY` set in your shell environment, the `claude`
+  binary will use it **regardless of any other authentication** — it overrides
+  both the OAuth token and `claude login`, even with an active Pro/Max subscription.
+  Unset it if you want to authenticate via subscription:
+  ```bash
+  unset ANTHROPIC_API_KEY
+  ```
+  See [claude-code authentication](/runners/claude-code#authentication) for the full details.
+</Warning>
 
 ## How to select a runner
 
