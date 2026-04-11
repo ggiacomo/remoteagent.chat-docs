@@ -19,8 +19,8 @@ First, generate a new pairing code: go to [remoteagent.chat/dashboard](https://r
 The bot now has two agents registered. Each has a unique agent ID and a project name you assigned during init.
 
 <Note>
-  The number of agents you can register depends on your plan. Trial and Solo
-  allow up to 3 projects. Pro and Team allow unlimited projects. See
+  The number of projects you can register depends on your plan. Solo allows up
+  to 3 projects. Trial and Pro allow unlimited projects. See
   [Pricing](/pricing) for details.
 </Note>
 
@@ -69,27 +69,14 @@ When you send a message to the bot, routing works as follows:
 To switch which project receives your commands, send:
 
 ```
-/project
+/projects
 ```
 
-The bot responds with the project selector. Choose the number of the project you want to target. All subsequent commands go to that project until you switch again.
+The bot responds with an inline keyboard listing all your projects. Tap the one you want to target. All subsequent commands go to that project until you switch again.
 
-You can also address a project directly by name:
+## Listing your projects
 
-```
-/project frontend
-```
-
-## Listing your agents
-
-Send `/agents` to the bot to see all registered agents and their current status:
-
-```
-Your agents:
-1. my-api — online (last seen: just now)
-2. frontend — online (last seen: 2 minutes ago)
-3. data-pipeline — offline (last seen: 3 days ago)
-```
+Send `/projects` to the bot to see all registered projects and their current status. The bot displays an inline keyboard — tap any project to switch to it.
 
 ## Managing agents from the dashboard
 

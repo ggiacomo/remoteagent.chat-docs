@@ -61,13 +61,9 @@ The agent receives the abort signal via the Redis channel and terminates the cur
 
 ## Continuing a task
 
-If the AI produced a partial result and you want it to continue from where it left off, send:
+When the agent is waiting for your input — for example, if it asked a clarifying question — just reply naturally with your next message. The agent will automatically resume from where it left off.
 
-```
-continue
-```
-
-This is useful when the output was cut off or the AI indicated it needed more steps to finish.
+There is no explicit `continue` command. If the agent is waiting, any message you send continues the task.
 
 ## Examples by category
 
@@ -104,7 +100,7 @@ Create a new API endpoint GET /api/stats that returns total session count for th
 ### Explanation
 
 ```
-Explain what the realtime.ts file does and how it connects to Supabase
+Explain what the realtime.ts file does and how it connects to Redis
 ```
 
 ```
