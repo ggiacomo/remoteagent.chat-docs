@@ -66,7 +66,7 @@ The only persistent process in the entire system is the **agent on your machine*
 
 ## The agent on your machine
 
-The agent is a Node.js process that:
+The agent is a self-contained binary that:
 
 1. Subscribes to `agent:{agentId}` on Redis at startup.
 2. On receiving a `command` event, calls the configured AI runner with the prompt.
