@@ -38,7 +38,6 @@
             "group": "Getting Started",
             "pages": [
               "getting-started/quickstart",
-              "getting-started/installation",
               "getting-started/pairing"
             ]
           },

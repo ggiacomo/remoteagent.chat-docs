@@ -23,7 +23,23 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
     remoteagent --version
     ```
 
-    You should see the current version number printed to stdout.
+    The binary is self-contained — no Node.js or runtime required. Runs on Linux, macOS, and Windows (WSL recommended on Windows).
+  </Step>
+
+  <Step title="Install your runner (if needed)">
+    RemoteAgent supports multiple AI runners. The default is `claude-sdk` which runs in-process with no extra setup. Other runners require their own binary installed first.
+
+    | Runner | Prerequisite |
+    |---|---|
+    | `claude-sdk` | None — runs in-process. Needs an Anthropic API key. |
+    | `claude-code` | `npm install -g @anthropic-ai/claude-code` |
+    | `opencode` | `npm install -g opencode-ai` |
+    | `gemini` | `npm install -g @google/gemini-cli` |
+    | `aider` | `pip install aider-chat` |
+    | `openclaw` | OpenClaw daemon running on port `18789` |
+    | `custom` | Any binary that reads stdin and writes stdout |
+
+    See [Runners](/runners/overview) for details on each option.
   </Step>
 
   <Step title="Get your pairing code from the dashboard">
@@ -47,8 +63,8 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
 
     The interactive wizard will ask you:
 
-    - **Runner** — which AI engine to use. Press Enter to accept the default (`claude-sdk`), or type a runner name. See [Runners](/runners/overview) for the full list.
-    - **API key** — only required for runners that need one (e.g., `claude-sdk`, `claude-code`). Stored locally in `~/.remoteagent/config.json`, never transmitted.
+    - **Runner** — which AI engine to use. Press Enter to accept the default (`claude-sdk`), or type a runner name.
+    - **API key** — only required for runners that need one. Stored locally in `~/.remoteagent/config.json`, never transmitted.
     - **Pairing code** — paste the code you got from the dashboard in the previous step.
 
     Once the code is accepted, the agent is paired and starts automatically.
@@ -76,6 +92,14 @@ description: "From zero to a working Telegram-controlled AI agent in under five 
     ```
   </Step>
 </Steps>
+
+## Updating
+
+```bash
+remoteagent reinstall
+```
+
+This updates the binary in-place and automatically restarts any running agents.
 
 ## What's next
 
