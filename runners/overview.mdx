@@ -52,9 +52,9 @@ remoteagent init --runner custom --runner-bin /path/to/binary
 
 ## Switching runners
 
-To change the runner for an existing agent, run `remoteagent init` again in the same project directory. The wizard detects your existing configuration and lets you update the runner without regenerating a new pairing code (the agent is already paired).
+To change the runner for an existing agent, run `remoteagent init` again in the same project directory. The wizard will detect your existing configuration and ask what you want to do — choose **"Update runner — keep existing pairing"** to change only the runner without re-pairing.
 
-Restart the agent after changing the runner:
+After the wizard completes, start the agent:
 
 ```bash
 remoteagent start
