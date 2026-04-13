@@ -38,7 +38,8 @@
             "group": "Getting Started",
             "pages": [
               "getting-started/quickstart",
-              "getting-started/pairing"
+              "getting-started/pairing",
+              "getting-started/best-practices"
             ]
           },
           {

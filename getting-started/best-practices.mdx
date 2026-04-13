@@ -1,0 +1,177 @@
+---
+title: "Best Practices"
+description: "Recommendations for a stable, reliable RemoteAgent setup — from server environment to process management."
+---
+
+<Note>
+  These are optional but strongly recommended steps. A well-configured environment means your agent survives reboots, recovers from crashes, and stays accessible no matter where you are.
+</Note>
+
+## Keep the agent running with PM2
+
+By default, `remoteagent start` launches a background process that dies if the server reboots. To make it survive reboots automatically, use [PM2](https://pm2.keymetrics.io):
+
+```bash
+npm install -g pm2
+```
+
+Start your agent via PM2 instead of the built-in background mode:
+
+```bash
+pm2 start remoteagent --name "remoteagent" -- start
+```
+
+Save the process list and enable startup on boot:
+
+```bash
+pm2 save
+pm2 startup
+```
+
+Run the command PM2 prints (it looks like `sudo env PATH=... pm2 startup systemd -u ...`) to register it with your init system.
+
+To check status and logs:
+
+```bash
+pm2 status
+pm2 logs remoteagent
+```
+
+<Tip>
+  If you have multiple agents (Pro plan), start each one with a different PM2 name: `pm2 start remoteagent --name "project-a" -- start --agent <agentId>`.
+</Tip>
+
+---
+
+## Install Git
+
+Most AI coding runners (Claude Code, Aider, Gemini) will try to run `git` commands. Make sure Git is installed before pairing:
+
+```bash
+# Debian / Ubuntu
+sudo apt install git -y
+
+# macOS
+brew install git
+
+# Fedora / RHEL
+sudo dnf install git -y
+```
+
+Verify:
+
+```bash
+git --version
+```
+
+Also configure your identity so commits work without prompts:
+
+```bash
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```
+
+---
+
+## Set a default project directory
+
+Always run `remoteagent init` from the root of your project. The working directory is saved in the agent config and used as the base path for every command. Using `~/` or `/tmp` as the project path will confuse the runner.
+
+A good layout:
+
+```
+~/projects/
+  my-api/          ← run remoteagent init here
+  my-frontend/     ← separate agent for each project
+```
+
+---
+
+## Keep your runner authenticated
+
+RemoteAgent doesn't store your AI credentials — the runner must be authenticated on the machine.
+
+**Claude Code (OAuth):** tokens expire after 1 year. You can generate a long-lived token during `remoteagent init` or refresh it later:
+
+```bash
+remoteagent config --refresh-oauth
+```
+
+**Claude SDK:** your API key is stored in the agent config file (`~/.remoteagent/agents/{agentId}.json`). Rotate it when needed:
+
+```bash
+remoteagent config --api-key sk-ant-...
+```
+
+**Gemini / Aider:** check that the relevant environment variable (`GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, etc.) is set in the shell profile (`~/.bashrc` or `~/.zshrc`) so it's available on every session.
+
+---
+
+## Use a dedicated low-privilege user
+
+Avoid running RemoteAgent as `root`. Create a dedicated system user with access only to your project directories:
+
+```bash
+sudo adduser --disabled-password remoteagent-user
+sudo chown -R remoteagent-user:remoteagent-user ~/projects/my-api
+```
+
+Run the agent as that user:
+
+```bash
+sudo -u remoteagent-user remoteagent start
+```
+
+This limits the blast radius if a prompt accidentally runs a destructive command.
+
+---
+
+## Protect your config files
+
+The agent config files contain your API key and agent token in plain text. Ensure only your user can read them:
+
+```bash
+chmod 700 ~/.remoteagent
+chmod 600 ~/.remoteagent/agents/*.json
+```
+
+These permissions are set automatically by `remoteagent init`, but worth verifying if you've moved files manually.
+
+---
+
+## Set up a swap file (low-memory servers)
+
+AI runners (especially Claude SDK and Aider) can use significant memory. On VPS instances with 1 GB RAM or less, adding swap prevents out-of-memory crashes:
+
+```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+---
+
+## Keep RemoteAgent up to date
+
+New versions ship bug fixes and runner improvements. Update with the same install command:
+
+```bash
+curl -fsSL https://remoteagent.chat/install | bash
+```
+
+The installer always fetches the latest release. Your config and agents are untouched.
+
+---
+
+## Test the connection before going remote
+
+Before relying on RemoteAgent from your phone, verify the full loop works locally:
+
+1. Start the agent: `remoteagent start`
+2. Open Telegram and send `/status` to the bot
+3. Send a simple prompt: `"echo hello world"`
+4. Confirm you see the output in Telegram
+
+If `/status` shows the agent as online and you get a response, the setup is solid.
