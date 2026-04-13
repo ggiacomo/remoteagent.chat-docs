@@ -155,13 +155,13 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 ## Keep RemoteAgent.CHAT up to date
 
-New versions ship bug fixes and runner improvements. Update with the same install command:
+New versions ship bug fixes and runner improvements. Update with:
 
 ```bash
-curl -fsSL https://remoteagent.chat/install | bash
+remoteagent reinstall
 ```
 
-The installer always fetches the latest release. Your config and agents are untouched.
+This updates the binary in-place and automatically restarts any running agents. Your config and agents are untouched.
 
 ---
 
