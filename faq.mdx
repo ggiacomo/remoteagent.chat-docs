@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-description: "Answers to common questions about RemoteAgent setup, security, billing, and usage."
+description: "Answers to common questions about RemoteAgent.CHAT setup, security, billing, and usage."
 ---
 
 <AccordionGroup>
@@ -31,7 +31,7 @@ description: "Answers to common questions about RemoteAgent setup, security, bil
   </Accordion>
 
   <Accordion title="Is my API key safe?">
-    Yes. Your API key is stored in `~/.remoteagent/agents/{agentId}.json` on your local machine and is **never transmitted to RemoteAgent servers**. The agent calls the AI model API directly from your machine. RemoteAgent only sees the prompt you sent via Telegram, not the full conversation context or your credentials.
+    Yes. Your API key is stored in `~/.remoteagent/agents/{agentId}.json` on your local machine and is **never transmitted to RemoteAgent.CHAT servers**. The agent calls the AI model API directly from your machine. RemoteAgent.CHAT only sees the prompt you sent via Telegram, not the full conversation context or your credentials.
 
     For additional security, set restrictive permissions on the config files:
 
@@ -57,8 +57,8 @@ description: "Answers to common questions about RemoteAgent setup, security, bil
     To reactivate, choose any paid plan from the dashboard or via the link in the bot's trial expiry message. Your agents come back online within 30 seconds of payment confirmation, automatically.
   </Accordion>
 
-  <Accordion title="Can I self-host RemoteAgent?">
-    Not currently. The relay infrastructure runs on RemoteAgent's managed stack. The relay is designed to be transparent — it does not inspect your code or store sensitive data beyond a prompt preview. The agent package itself runs entirely on your machine.
+  <Accordion title="Can I self-host RemoteAgent.CHAT?">
+    Not currently. The relay infrastructure runs on RemoteAgent.CHAT's managed stack. The relay is designed to be transparent — it does not inspect your code or store sensitive data beyond a prompt preview. The agent package itself runs entirely on your machine.
   </Accordion>
 
   <Accordion title="What if my agent goes offline?">
@@ -95,22 +95,22 @@ description: "Answers to common questions about RemoteAgent setup, security, bil
     ```
   </Accordion>
 
-  <Accordion title="What data does RemoteAgent store?">
-    RemoteAgent stores:
+  <Accordion title="What data does RemoteAgent.CHAT store?">
+    RemoteAgent.CHAT stores:
 
     - Your Telegram user ID and username
     - Your plan and billing status
     - Agent metadata: project name, last-seen timestamp, online/offline status
     - Session records: start time, end time, status, and the first 200 characters of your prompt
 
-    RemoteAgent does not store:
+    RemoteAgent.CHAT does not store:
     - Your API keys
     - Your source code
     - Full prompt or response content
     - File contents processed by the AI runner
   </Accordion>
 
-  <Accordion title="Does RemoteAgent work on Windows?">
+  <Accordion title="Does RemoteAgent.CHAT work on Windows?">
     The agent binary runs on Windows via **WSL 2** (Windows Subsystem for Linux). Install WSL 2 and run the installer from within the WSL environment — no Node.js required.
 
     Native Windows support (PowerShell/CMD) is not officially tested or guaranteed. WSL 2 is the recommended path for Windows users.

@@ -8,7 +8,7 @@ The `claude-sdk` runner uses Anthropic's `@anthropic-ai/claude-code` Node.js SDK
 ## Requirements
 
 - An **Anthropic API key** (`sk-ant-...`). Get one at [console.anthropic.com](https://console.anthropic.com).
-- No additional binary to install. The SDK runs in-process within the RemoteAgent binary.
+- No additional binary to install. The SDK runs in-process within the RemoteAgent.CHAT binary.
 
 ## Setup
 
@@ -20,7 +20,7 @@ remoteagent init
 # ? Anthropic API key: sk-ant-...
 ```
 
-The key is saved to `~/.remoteagent/agents/{agentId}.json` on your local machine. It is never transmitted to RemoteAgent servers. Each project can use a different key — useful if you have multiple projects billed to separate Anthropic accounts.
+The key is saved to `~/.remoteagent/agents/{agentId}.json` on your local machine. It is never transmitted to RemoteAgent.CHAT servers. Each project can use a different key — useful if you have multiple projects billed to separate Anthropic accounts.
 
 To use this runner from the command line without the interactive wizard:
 
@@ -52,7 +52,7 @@ Each chunk is forwarded to Telegram as it arrives, so you see the response progr
 
 <Warning>
   Your Anthropic API key is stored locally in `~/.remoteagent/agents/{agentId}.json` and
-  is **never** sent to RemoteAgent servers or included in any network request
+  is **never** sent to RemoteAgent.CHAT servers or included in any network request
   made by the relay. The SDK calls Anthropic's API directly from your machine.
 </Warning>
 
@@ -65,6 +65,6 @@ chmod 600 ~/.remoteagent/agents/*.json
 
 ## Costs
 
-API usage is billed by Anthropic based on input and output tokens. RemoteAgent does not add any markup or take a cut of API costs. Your Anthropic account is billed directly for all model usage.
+API usage is billed by Anthropic based on input and output tokens. RemoteAgent.CHAT does not add any markup or take a cut of API costs. Your Anthropic account is billed directly for all model usage.
 
 Refer to [Anthropic's pricing page](https://www.anthropic.com/pricing) for current token rates.

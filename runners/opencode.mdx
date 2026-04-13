@@ -51,7 +51,7 @@ During `remoteagent init`, the wizard will ask:
 
 ## How it works
 
-RemoteAgent injects configuration at runtime using the `OPENCODE_CONFIG_CONTENT` environment variable — opencode's native config injection mechanism. RemoteAgent does not write any config files to disk.
+RemoteAgent.CHAT injects configuration at runtime using the `OPENCODE_CONFIG_CONTENT` environment variable — opencode's native config injection mechanism. RemoteAgent.CHAT does not write any config files to disk.
 
 The runner executes:
 
@@ -72,13 +72,13 @@ If you chose **OpenCode Zen** during `remoteagent init`, the provider block is i
 }
 ```
 
-Only the settings collected during the wizard are injected. Any additional opencode configuration you set in your own `opencode.json` file will be picked up by opencode automatically — RemoteAgent does not interfere with it.
+Only the settings collected during the wizard are injected. Any additional opencode configuration you set in your own `opencode.json` file will be picked up by opencode automatically — RemoteAgent.CHAT does not interfere with it.
 
 Output from stdout is forwarded to Telegram as it arrives.
 
 ## OpenCode's own configuration
 
-opencode has a rich native configuration system (`opencode.json`). Any settings not exposed in the RemoteAgent wizard — custom keybindings, themes, provider-specific options, agent behaviors — can be configured directly in that file. opencode reads it automatically on every run.
+opencode has a rich native configuration system (`opencode.json`). Any settings not exposed in the RemoteAgent.CHAT wizard — custom keybindings, themes, provider-specific options, agent behaviors — can be configured directly in that file. opencode reads it automatically on every run.
 
 See [OpenCode's documentation](https://opencode.ai/docs) for the full list of supported configuration options and providers.
 

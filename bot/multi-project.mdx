@@ -3,7 +3,7 @@ title: "Multi-project"
 description: "Register multiple agents for different projects and control them all from the same Telegram bot."
 ---
 
-RemoteAgent supports running multiple agents — one per project — all connected to the same Telegram bot. This lets you switch between projects without leaving Telegram: one message fixes a bug in your API, the next deploys a feature in your frontend.
+RemoteAgent.CHAT supports running multiple agents — one per project — all connected to the same Telegram bot. This lets you switch between projects without leaving Telegram: one message fixes a bug in your API, the next deploys a feature in your frontend.
 
 ## Registering a second agent
 
@@ -85,7 +85,7 @@ For agents on a server or a machine that stays on, consider running them as syst
   ```bash systemd (Linux)
   # /etc/systemd/system/remoteagent-myapi.service
   [Unit]
-  Description=RemoteAgent — my-api
+  Description=RemoteAgent.CHAT — my-api
   After=network.target
 
   [Service]

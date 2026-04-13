@@ -1,13 +1,13 @@
 ---
 title: "Architecture"
-description: "How RemoteAgent works — the message flow from Telegram to your agent and back."
+description: "How RemoteAgent.CHAT works — the message flow from Telegram to your agent and back."
 ---
 
-RemoteAgent is built on a serverless-first architecture. There is no custom server to maintain on the cloud side, and no persistent connection between Telegram and your machine. Everything is event-driven.
+RemoteAgent.CHAT is built on a serverless-first architecture. There is no custom server to maintain on the cloud side, and no persistent connection between Telegram and your machine. Everything is event-driven.
 
 ## Components
 
-**RemoteAgent cloud** — a serverless web app that handles Telegram webhook events, authenticates requests, and relays messages. It has no persistent state beyond what's in the database.
+**RemoteAgent.CHAT cloud** — a serverless web app that handles Telegram webhook events, authenticates requests, and relays messages. It has no persistent state beyond what's in the database.
 
 **Message broker** — a managed pub/sub layer that decouples the cloud from your agent. Messages flow in real time without polling.
 
@@ -22,7 +22,7 @@ You (Telegram)
 Telegram servers
      │  webhook
      ▼
-RemoteAgent cloud
+RemoteAgent.CHAT cloud
   — verifies request authenticity
   — identifies the target agent
   — publishes command to message broker
@@ -40,7 +40,7 @@ Your machine (agent process)
 Message broker
      │
      ▼
-RemoteAgent cloud
+RemoteAgent.CHAT cloud
   — forwards each chunk to Telegram
      │
      ▼
@@ -49,7 +49,7 @@ You (Telegram) — output streams in real time
 
 ## Design principles
 
-**Your API key never leaves your machine.** The agent calls your AI runner locally. No credentials are transmitted to RemoteAgent servers.
+**Your API key never leaves your machine.** The agent calls your AI runner locally. No credentials are transmitted to RemoteAgent.CHAT servers.
 
 **Serverless on the cloud side.** The web app wakes on each incoming event, processes it, and exits. There is no always-on server process to maintain or scale.
 

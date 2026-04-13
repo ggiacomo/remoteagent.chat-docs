@@ -1,13 +1,13 @@
 ---
 title: "openclaw"
-description: "Connect RemoteAgent to a self-hosted AI gateway via the OpenClaw HTTP interface."
+description: "Connect RemoteAgent.CHAT to a self-hosted AI gateway via the OpenClaw HTTP interface."
 ---
 
 <Warning>
   The `openclaw` runner is in **beta** and has not been fully tested. You may encounter bugs or unexpected behavior. Use with caution.
 </Warning>
 
-The `openclaw` runner connects to a locally running OpenClaw daemon that exposes an AI gateway on a configurable port (default `18789`). OpenClaw manages its own configuration entirely via its own setup wizard — RemoteAgent does not configure OpenClaw settings.
+The `openclaw` runner connects to a locally running OpenClaw daemon that exposes an AI gateway on a configurable port (default `18789`). OpenClaw manages its own configuration entirely via its own setup wizard — RemoteAgent.CHAT does not configure OpenClaw settings.
 
 ## Requirements
 
@@ -22,11 +22,11 @@ npm install -g openclaw@latest
 openclaw onboard --install-daemon
 ```
 
-`openclaw onboard --install-daemon` will walk you through OpenClaw's own configuration wizard and install the background daemon. Once the daemon is running, you can proceed to initialize RemoteAgent.
+`openclaw onboard --install-daemon` will walk you through OpenClaw's own configuration wizard and install the background daemon. Once the daemon is running, you can proceed to initialize RemoteAgent.CHAT.
 
 <Warning>
   Run `openclaw onboard --install-daemon` before `remoteagent init`. The
-  RemoteAgent wizard checks whether the daemon is reachable and will show
+  RemoteAgent.CHAT wizard checks whether the daemon is reachable and will show
   instructions if it is not found.
 </Warning>
 
@@ -46,7 +46,7 @@ During `remoteagent init`, the wizard will:
 2. Check whether the OpenClaw daemon is reachable on that port
 3. If the daemon is not found: display setup instructions and offer to exit or continue anyway
 
-RemoteAgent does not configure any OpenClaw settings — all model routing, API keys, and gateway behavior are managed through OpenClaw's own configuration.
+RemoteAgent.CHAT does not configure any OpenClaw settings — all model routing, API keys, and gateway behavior are managed through OpenClaw's own configuration.
 
 ## How it works
 
@@ -80,5 +80,5 @@ The `model` field defaults to `"default"` — OpenClaw is responsible for routin
 | Full control over the AI backend | Requires running and maintaining the OpenClaw daemon |
 | Works with any OpenAI-compatible model | OpenClaw daemon must be running before the agent starts |
 | Air-gap compatible | More setup complexity |
-| No API key managed by RemoteAgent | — |
+| No API key managed by RemoteAgent.CHAT | — |
 | OpenClaw handles all its own configuration | — |
