@@ -23,7 +23,7 @@ claude --version
 
 ## Authentication
 
-The `claude` binary must be authenticated before the agent can use it. There are three options:
+The `claude` binary must be authenticated before the agent can use it. There are four options:
 
 ### Option A — Long-lived OAuth token (recommended for servers)
 
@@ -52,7 +52,19 @@ claude login
 
 This stores a session credential managed by the `claude` CLI itself. Sessions expire periodically and must be renewed manually by running `claude login` again on the same machine. Best for local development machines you have direct access to.
 
-### Option C — API key
+### Option C — Third-party provider (Amazon Bedrock, Google Vertex AI, Microsoft Azure)
+
+If your organisation accesses Claude through a cloud provider rather than a direct Anthropic subscription, run:
+
+```bash
+claude /login
+```
+
+The wizard lets you choose your provider and enter the required credentials (AWS IAM keys for Bedrock, a GCP service account JSON for Vertex AI, or an Azure endpoint for Foundry). Credentials are saved locally by the `claude` binary — they are never transmitted to RemoteAgent.
+
+During `remoteagent init`, choose **"Third-party provider"** in the authentication step and the wizard will run `claude /login` for you.
+
+### Option D — API key
 
 If you have an `ANTHROPIC_API_KEY` set in your environment, the `claude` binary will use it automatically.
 
