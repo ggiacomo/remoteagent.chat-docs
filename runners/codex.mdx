@@ -106,6 +106,33 @@ The default model is `gpt-5.4`. To use a different model, specify it during `rem
   `gpt-5.3-codex` is deprecated and causes WebSocket reconnect loops. Use `gpt-5.4` or a newer model.
 </Note>
 
+## Yolo mode
+
+By default the runner uses `--full-auto` (`--sandbox workspace-write`), which allows file writes inside the working directory but keeps the rest of the system sandboxed.
+
+**Yolo mode** passes `--dangerously-bypass-approvals-and-sandbox` instead, removing all sandbox restrictions and skipping every confirmation prompt. Use it when the agent needs to access the network, install packages, or run commands the default sandbox would block.
+
+Enable it with:
+
+```bash
+remoteagent config
+```
+
+Select **Runner settings** → toggle to **Yolo**. Or set it directly in the agent config file:
+
+```json
+// ~/.remoteagent/agents/<agentId>.json
+{
+  "codexYolo": true
+}
+```
+
+Restart the agent after changing this setting.
+
+<Warning>
+  Yolo mode removes all sandbox restrictions. Only enable it in environments you control and trust.
+</Warning>
+
 ## Updating Codex CLI
 
 ```bash
