@@ -105,10 +105,10 @@ remoteagent reinstall
 
 ## Uninstalling
 
-Remove the binary and optionally the local configuration:
+Run the built-in uninstall command — it stops all agents, deregisters them, deletes the local configuration, and removes the binary:
 
 ```bash
-rm $(which remoteagent)
-# Optional: remove local config
-rm -rf ~/.remoteagent
+remoteagent uninstall
 ```
+
+You will be asked to confirm before anything is deleted.
