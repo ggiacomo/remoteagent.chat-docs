@@ -117,10 +117,25 @@ remoteagent remove
 remoteagent remove my-project
 ```
 
+Alias: `rm`
+
 <Warning>
   This action is irreversible. The agent will need to be re-paired from scratch
   if you want to use it again.
 </Warning>
+
+---
+
+### `remoteagent pair [name]`
+
+Re-pair an existing local agent with a new dashboard entry. Useful if the agent was deleted from the dashboard or the pairing expired.
+
+```bash
+remoteagent pair
+remoteagent pair my-project
+```
+
+The command stops the agent (if running), prompts you for a new pairing code from the [dashboard](https://remoteagent.chat/dashboard), and updates the local config without touching runner settings.
 
 ---
 
@@ -151,6 +166,25 @@ Show all configured agents and their current status (online / offline).
 ```bash
 remoteagent list
 ```
+
+Alias: `status`
+
+---
+
+### `remoteagent uninstall`
+
+Remove all agents, delete `~/.remoteagent/` (all configs and logs), and remove the `remoteagent` binary.
+
+```bash
+remoteagent uninstall
+```
+
+Asks for confirmation before doing anything. Stops and deregisters all agents from the server first.
+
+<Warning>
+  This removes everything. To start using RemoteAgent again you will need to
+  reinstall and run `remoteagent init`.
+</Warning>
 
 ---
 
